@@ -1,0 +1,12 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets and local data (also ignored inside backend/ and frontend/)
+.env
+.env.*
+!.env.example
+backend/media/
+*.log
