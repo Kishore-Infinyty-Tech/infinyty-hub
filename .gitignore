@@ -1,4 +1,4 @@
-# Secrets and local settings (database passwords, storage keys). Each project has a .env.example to copy from.
+﻿# Secrets and local settings (database passwords, storage keys). Each project has a .env.example to copy from.
 .env
 .env.*
 !.env.example
@@ -21,6 +21,3 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Word and PDF documents in the CRM copy are not code
-crm-website/*.docx
-crm-website/*.pdf
