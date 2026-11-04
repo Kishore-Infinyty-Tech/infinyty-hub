@@ -26,7 +26,25 @@ It never wipes an existing database. Run `.\stop.bat` to stop everything.
 | http://localhost:3200 | CRM website (opens inside the portal) |
 | http://127.0.0.1:8001 | CRM API |
 
-Settings live in `portal/.env.local` (created from `portal/.env.example`). To rebuild the demo data on purpose: `cd portal`, then `npm run db:setup`.
+## Settings files (shared privately, not in git)
+
+The database address, the login secret and the photo-storage keys are in two files that are **not** stored in this repository. Ask the project owner for them and place them exactly here, before running `.\start.bat`:
+
+| File | Put it in this folder | What it holds |
+| --- | --- | --- |
+| `.env.local` | `portal\` (next to `portal\package.json`) | portal database, login secret, photo storage (B2) |
+| `.env` | `crm-websiteackend\` (next to `crm-websiteackend\manage.py`) | CRM database |
+
+```text
+internal tool  portal    .env.local        <- here
+    package.json
+  crm-website    backend      .env            <- here
+      manage.py
+  start.bat
+```
+
+If a file is missing, `start.bat` asks for the database address and creates it (the portal one from `portal\.env.example`). Photo storage stays off until the `B2_*` lines are filled in.
+Never commit these two files. They are listed in `.gitignore`. To rebuild the demo data on purpose: `cd portal`, then `npm run db:setup`.
 
 ## Pages and sign-in
 

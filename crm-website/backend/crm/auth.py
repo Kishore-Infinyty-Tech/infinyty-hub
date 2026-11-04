@@ -1,4 +1,6 @@
 """Cookie-based login with a signed token. No sessions table, no ORM."""
+import os
+
 from django.conf import settings
 from django.core import signing
 from django.http import JsonResponse
@@ -35,7 +37,7 @@ def set_login_cookie(response, user_id: int):
         make_token(user_id),
         max_age=MAX_AGE,
         httponly=True,
-        samesite="Lax",
+        samesite=os.environ.get("COOKIE_SAMESITE", "Lax"),
         secure=not settings.DEBUG,
     )
 
