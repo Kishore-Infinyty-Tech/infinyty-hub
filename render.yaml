@@ -1,0 +1,23 @@
+# Render blueprint for the CRM API. The two Next.js apps (portal, CRM website) go on Vercel; see DEPLOY.md.
+services:
+  - type: web
+    name: infinyty-crm-api
+    runtime: python
+    rootDir: crm-website/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DEBUG
+        value: "0"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: COOKIE_SAMESITE
+        value: None
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_URL
+        sync: false
