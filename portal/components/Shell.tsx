@@ -10,6 +10,7 @@ import { appIcon, hue } from "@/lib/icons";
 import type { AppItem, Notification, Role } from "@/lib/types";
 import { Logo } from "./Logo";
 import { Avatar, BrandLoader } from "./fx/effects";
+import { WhatsAppSimulatorButton } from "./WhatsAppSimulator";
 
 const NAV: { href: string; label: string; icon: typeof Home; roles?: Role[] }[] = [
   { href: "/home", label: "Home", icon: Home },
@@ -285,6 +286,7 @@ export function Shell({ children }: { children: ReactNode }) {
               </span>
             </button>
             <div className="ml-auto flex items-center gap-2">
+              <WhatsAppSimulatorButton />
               <RoleSwitcher />
               <span className="mx-1 hidden h-6 w-px bg-slate-200 lg:block" />
               <Notifications />
