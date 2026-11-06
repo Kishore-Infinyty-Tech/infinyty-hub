@@ -1,4 +1,4 @@
-﻿# Secrets and local settings (database passwords, storage keys). Each project has a .env.example to copy from.
+# Secrets and local settings (database passwords, storage keys). Each project has a .env.example to copy from.
 .env
 .env.*
 !.env.example
@@ -14,6 +14,7 @@ __pycache__/
 # Local data and logs
 backend/media/
 *.log
+whatsapp_ingestion_05_11_2026_backup.docx
 
 # OS / editor
 .DS_Store
