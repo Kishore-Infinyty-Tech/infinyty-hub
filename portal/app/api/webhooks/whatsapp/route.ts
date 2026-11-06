@@ -1,39 +1,50 @@
 import { fail, json, q } from "@/lib/db";
+import { currentUser } from "@/lib/auth";
+import { MODERATORS } from "@/lib/posts";
+import type { WhatsAppLogEntry } from "@/lib/whatsapp";
 import type { PostCategory } from "@/lib/types";
 
-export interface WhatsAppLogEntry {
-  id: string;
-  timestamp: string;
-  group_name: string;
-  sender_name: string;
-  sender_phone?: string;
-  text: string;
-  images: string[];
-  category: PostCategory;
-  post_id: number;
-  status: "staged" | "published" | "rejected";
-  raw_payload?: unknown;
-}
+const STATUS_MAP = { pending: "staged", published: "published", rejected: "rejected" } as const;
 
-// In-memory ring buffer for the live demo webhook stream inspector (stores up to 50 recent events)
-const g = globalThis as unknown as { __whatsappLogs?: WhatsAppLogEntry[] };
-const logs = (g.__whatsappLogs ??= []);
-
-export function recordLog(entry: WhatsAppLogEntry) {
-  logs.unshift(entry);
-  if (logs.length > 50) logs.pop();
-}
-
-export function updateLogStatus(postId: number, status: "published" | "rejected") {
-  const item = logs.find((l) => l.post_id === postId);
-  if (item) item.status = status;
+/** A signed-in HR Admin or Founder (the demo simulator), or the real WhatsApp provider sending WHATSAPP_WEBHOOK_SECRET. */
+async function allowed(req: Request) {
+  const secret = process.env.WHATSAPP_WEBHOOK_SECRET;
+  if (secret) {
+    const sent = req.headers.get("x-webhook-secret") ?? req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+    if (sent === secret) return true;
+  }
+  const me = await currentUser();
+  return !!me && MODERATORS.includes(me.role);
 }
 
 export async function GET() {
+  const me = await currentUser();
+  if (!me) return fail("Sign in first", 401);
+  if (!MODERATORS.includes(me.role)) return fail("HR Admins and Founders only", 403);
+  // Read from the database, not server memory: serverless instances do not share memory.
+  const rows = await q<{
+    id: number; body: string; category: PostCategory; images: string[] | null; image_url: string | null;
+    author_name: string | null; status: keyof typeof STATUS_MAP; created_at: string;
+  }>(
+    `select id, body, category, images, image_url, author_name, status, created_at
+       from portal.posts where source = 'whatsapp' order by created_at desc limit 50`,
+  );
+  const logs: WhatsAppLogEntry[] = rows.map((r) => ({
+    id: `wa_post_${r.id}`,
+    timestamp: new Date(r.created_at).toISOString(),
+    group_name: "WhatsApp group",
+    sender_name: r.author_name ?? "Unknown",
+    text: r.body,
+    images: r.images?.length ? r.images : r.image_url ? [r.image_url] : [],
+    category: r.category,
+    post_id: r.id,
+    status: STATUS_MAP[r.status] ?? "staged",
+  }));
   return json({ logs });
 }
 
 export async function POST(req: Request) {
+  if (!(await allowed(req))) return fail("Not allowed", 401);
   const payload = await req.json().catch(() => ({}));
 
   // Support both standard MilestoneOS/Whapi/Twilio payloads and quick simulation
@@ -125,7 +136,7 @@ export async function POST(req: Request) {
     [`From ${senderName} in ${groupName}: "${rawText.slice(0, 70)}..."`],
   );
 
-  // Log to in-memory stream for live inspection
+  // Echo the stored story back to the caller
   const logEntry: WhatsAppLogEntry = {
     id: `wa_evt_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     timestamp: new Date().toISOString(),
@@ -139,7 +150,6 @@ export async function POST(req: Request) {
     status: "staged",
     raw_payload: payload,
   };
-  recordLog(logEntry);
 
   return json(
     {

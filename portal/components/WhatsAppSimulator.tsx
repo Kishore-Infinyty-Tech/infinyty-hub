@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import type { PostCategory } from "@/lib/types";
-import type { WhatsAppLogEntry } from "@/app/api/webhooks/whatsapp/route";
+import type { WhatsAppLogEntry } from "@/lib/whatsapp";
 import { Badge, Button, Field, Input, Modal, Select, Textarea, useToast } from "./ui";
 
 interface Preset {
