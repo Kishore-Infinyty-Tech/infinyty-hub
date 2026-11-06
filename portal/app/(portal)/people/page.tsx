@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, Copy, KeyRound, Mail, Pencil, Search, ShieldCheck, UserPlus, Users } from "lucide-react";
+import { Briefcase, Check, Copy, Crown, KeyRound, Mail, Pencil, Search, ShieldCheck, UserPlus, Users } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { ROLE_LABEL, timeAgo } from "@/lib/format";
 import type { Role } from "@/lib/types";
@@ -19,6 +19,13 @@ const ROLE_STYLE: Record<Role, string> = {
   manager: "bg-indigo-50 text-indigo-700 ring-indigo-200",
   employee: "bg-slate-100 text-slate-600 ring-slate-200",
 };
+/** Top of the organisation first: Founders, then Managers, HR, and everyone else. */
+const GROUPS: { role: Role; title: string; hint: string; tone: string; icon: typeof Users }[] = [
+  { role: "founder", title: "Founders", hint: "Leadership", tone: "from-amber-500 to-orange-400", icon: Crown },
+  { role: "manager", title: "Managers", hint: "Lead teams and approve posts", tone: "from-indigo-600 to-cyan-glow", icon: Briefcase },
+  { role: "hr_admin", title: "HR Admin", hint: "People and moderation", tone: "from-violet-600 to-fuchsia-500", icon: ShieldCheck },
+  { role: "employee", title: "Employees", hint: "Each one reports to a manager", tone: "from-slate-600 to-slate-400", icon: Users },
+];
 const MANAGER_ROLES: Role[] = ["founder", "hr_admin", "manager"];
 
 /** Shown once after creating an account or resetting a password. */
@@ -146,6 +153,42 @@ export default function PeoplePage() {
   }, [people, tab, text]);
   const count = (r: Role) => (people ?? []).filter((p) => p.role === r).length;
 
+  const renderCard = (p: Person) => (
+      <article key={p.id} className={`glass hover-lift group flex h-full flex-col rounded-3xl p-5 ${p.id === user?.id ? "ring-2 ring-indigo-200" : ""}`}>
+        <div className="flex items-start gap-3.5">
+          <Avatar name={p.name} src={p.avatar_url} size={52} />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-base font-bold leading-tight text-slate-900">{p.name}</p>
+            <p className="mt-0.5 truncate text-sm text-slate-600">{p.title ?? "—"}</p>
+            <p className="truncate text-xs text-slate-400">{p.department ?? "—"}</p>
+          </div>
+          {canEdit && (p.role !== "founder" || user?.role === "founder") && (
+            <button onClick={() => setForm({ mode: "edit", person: p })} aria-label={`Edit ${p.name}`} className="-mr-1 -mt-1 rounded-xl p-2 text-slate-300 opacity-0 transition-all hover:bg-indigo-50 hover:text-indigo-600 focus:opacity-100 group-hover:opacity-100"><Pencil className="h-4 w-4" /></button>
+          )}
+        </div>
+
+        <dl className="mt-4 space-y-2 border-t border-slate-200/60 pt-4 text-[13px]">
+          <div className="flex items-center gap-2.5"><Mail className="h-4 w-4 shrink-0 text-slate-400" /><dd className="truncate text-slate-600">{p.email}</dd></div>
+          <div className="flex items-center gap-2.5">
+            <Users className="h-4 w-4 shrink-0 text-slate-400" />
+            <dd className="min-w-0 flex-1 truncate text-slate-600">{p.manager_name ? <>Reports to <b className="font-semibold text-slate-800">{p.manager_name}</b></> : <span className="text-slate-500">Top of the organisation</span>}</dd>
+            <span className="shrink-0 text-xs font-medium text-slate-400">{p.reports} {p.reports === 1 ? "report" : "reports"}</span>
+          </div>
+        </dl>
+
+        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+          <span className="flex items-center gap-1.5">
+            <Badge className={ROLE_STYLE[p.role]}>{ROLE_LABEL[p.role]}</Badge>
+            {p.id === user?.id && <Badge className="bg-indigo-600 text-white ring-indigo-600">You</Badge>}
+          </span>
+          {p.has_login
+            ? <Badge className="whitespace-nowrap bg-emerald-50 text-emerald-700 ring-emerald-200"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{p.last_login_at ? `Active ${timeAgo(p.last_login_at)}` : "Invited"}</Badge>
+            : <Badge className="whitespace-nowrap bg-slate-100 text-slate-500 ring-slate-200">No login</Badge>}
+        </div>
+      </article>
+
+  );
+
   if (user?.role === "employee") return <Card><Empty icon={<Users className="h-7 w-7" />} title="Managers, HR and the Founder only" hint="Ask your manager if you need an account changed." /></Card>;
 
   return (
@@ -164,8 +207,8 @@ export default function PeoplePage() {
         <Tabs value={tab} onChange={setTab} tabs={[
           { id: "all", label: "Everyone", count: people?.length },
           { id: "founder", label: "Founders", count: count("founder") },
-          { id: "hr_admin", label: "HR", count: count("hr_admin") },
           { id: "manager", label: "Managers", count: count("manager") },
+          { id: "hr_admin", label: "HR", count: count("hr_admin") },
           { id: "employee", label: "Employees", count: count("employee") },
         ]} />
       </div>
@@ -175,41 +218,22 @@ export default function PeoplePage() {
       ) : shown.length === 0 ? (
         <Card><Empty icon={<Users className="h-7 w-7" />} title="No one matches" hint="Try another word or tab." /></Card>
       ) : (
-        <div className="stagger grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {shown.map((p) => (
-            <article key={p.id} className={`glass hover-lift group flex h-full flex-col rounded-3xl p-5 ${p.id === user?.id ? "ring-2 ring-indigo-200" : ""}`}>
-              <div className="flex items-start gap-3.5">
-                <Avatar name={p.name} src={p.avatar_url} size={52} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-base font-bold leading-tight text-slate-900">{p.name}</p>
-                  <p className="mt-0.5 truncate text-sm text-slate-600">{p.title ?? "—"}</p>
-                  <p className="truncate text-xs text-slate-400">{p.department ?? "—"}</p>
+        <div className="space-y-10">
+          {GROUPS.map((g) => {
+            const list = shown.filter((p) => p.role === g.role);
+            if (list.length === 0) return null;
+            return (
+              <section key={g.role}>
+                <div className="mb-4 flex items-center gap-3">
+                  <span className={`grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br ${g.tone} text-white shadow-md`}><g.icon className="h-[18px] w-[18px]" /></span>
+                  <div><h2 className="text-base font-bold leading-tight text-slate-900">{g.title}</h2><p className="text-xs text-slate-500">{g.hint}</p></div>
+                  <span className="rounded-full bg-white/80 px-2.5 py-0.5 text-xs font-bold text-slate-600 ring-1 ring-slate-200">{list.length}</span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-slate-300/70 to-transparent" />
                 </div>
-                {canEdit && (p.role !== "founder" || user?.role === "founder") && (
-                  <button onClick={() => setForm({ mode: "edit", person: p })} aria-label={`Edit ${p.name}`} className="-mr-1 -mt-1 rounded-xl p-2 text-slate-300 opacity-0 transition-all hover:bg-indigo-50 hover:text-indigo-600 focus:opacity-100 group-hover:opacity-100"><Pencil className="h-4 w-4" /></button>
-                )}
-              </div>
-
-              <dl className="mt-4 space-y-2 border-t border-slate-200/60 pt-4 text-[13px]">
-                <div className="flex items-center gap-2.5"><Mail className="h-4 w-4 shrink-0 text-slate-400" /><dd className="truncate text-slate-600">{p.email}</dd></div>
-                <div className="flex items-center gap-2.5">
-                  <Users className="h-4 w-4 shrink-0 text-slate-400" />
-                  <dd className="min-w-0 flex-1 truncate text-slate-600">{p.manager_name ? <>Reports to <b className="font-semibold text-slate-800">{p.manager_name}</b></> : <span className="text-slate-500">Top of the organisation</span>}</dd>
-                  <span className="shrink-0 text-xs font-medium text-slate-400">{p.reports} {p.reports === 1 ? "report" : "reports"}</span>
-                </div>
-              </dl>
-
-              <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-                <span className="flex items-center gap-1.5">
-                  <Badge className={ROLE_STYLE[p.role]}>{ROLE_LABEL[p.role]}</Badge>
-                  {p.id === user?.id && <Badge className="bg-indigo-600 text-white ring-indigo-600">You</Badge>}
-                </span>
-                {p.has_login
-                  ? <Badge className="whitespace-nowrap bg-emerald-50 text-emerald-700 ring-emerald-200"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{p.last_login_at ? `Active ${timeAgo(p.last_login_at)}` : "Invited"}</Badge>
-                  : <Badge className="whitespace-nowrap bg-slate-100 text-slate-500 ring-slate-200">No login</Badge>}
-              </div>
-            </article>
-          ))}
+                <div className="stagger grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{list.map(renderCard)}</div>
+              </section>
+            );
+          })}
         </div>
       )}
 
