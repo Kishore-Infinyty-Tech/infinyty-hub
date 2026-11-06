@@ -1,7 +1,6 @@
 import { fail, json, q } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { MODERATORS, notifyEveryone } from "@/lib/posts";
-import { updateLogStatus } from "@/app/api/webhooks/whatsapp/route";
 import type { PostCategory } from "@/lib/types";
 
 const CATEGORY_LABEL: Record<PostCategory, string> = {
@@ -45,7 +44,6 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
         where id = $1`,
       [id, me.id, reason],
     );
-    updateLogStatus(id, "rejected");
     return json({ ok: true, action: "rejected" });
   }
 
@@ -91,8 +89,6 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       sendToPerformance,
     ],
   );
-
-  updateLogStatus(id, "published");
 
   // Broadcast to feed: notify everyone
   await notifyEveryone(me.id, "New company story", title, "/home");
