@@ -97,64 +97,73 @@ export function PerformanceView({ app }: { app: AppItem }) {
       } />
 
       {!data ? (
-        <div className="grid gap-5 xl:grid-cols-[320px_1fr]"><Skeleton className="h-72 rounded-3xl" /><Skeleton className="h-96 rounded-3xl" /></div>
+        <div className="space-y-5"><Skeleton className="h-28 rounded-3xl" /><Skeleton className="h-[28rem] rounded-3xl" /></div>
       ) : !data.user ? (
         <Card><Empty title="Person not found" /></Card>
       ) : (
-        <div className="grid items-start gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-          <div className="space-y-5 xl:sticky xl:top-20">
-            <div className="bg-navy-gradient relative overflow-hidden rounded-3xl p-6 text-white shadow-lift">
-              <div className="dot-grid absolute inset-0 opacity-25" />
-              <div className="relative flex flex-col items-center text-center">
-                <Avatar name={data.user.name} src={data.user.avatar_url} size={72} ring />
-                <p className="mt-3 text-lg font-bold">{data.user.name}</p>
-                <p className="text-sm text-indigo-100">{data.user.title}</p>
-                <p className="mt-0.5 text-xs text-cyan-glow">{data.user.department}{data.user.manager_name ? ` · reports to ${data.user.manager_name}` : ""}</p>
+        <div className="space-y-6">
+          {/* slim profile strip: who this is, at a glance */}
+          <div className="bg-navy-gradient relative overflow-hidden rounded-3xl p-4 text-white shadow-lift sm:p-5">
+            <div className="dot-grid absolute inset-0 opacity-25" />
+            <span className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-cyan-glow/25 blur-3xl" />
+            <div className="relative flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <Avatar name={data.user.name} src={data.user.avatar_url} size={56} ring />
+                <div className="min-w-0">
+                  <p className="truncate text-lg font-bold leading-tight">{data.user.name}</p>
+                  <p className="truncate text-sm text-indigo-100">{data.user.title}</p>
+                  <p className="truncate text-xs text-cyan-glow">{data.user.department}{data.user.manager_name ? ` · reports to ${data.user.manager_name}` : ""}</p>
+                </div>
               </div>
-              <div className="relative mt-5 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl bg-white/10 p-3 text-center ring-1 ring-white/15"><p className="text-2xl font-bold"><CountUp value={verified.length} /></p><p className="text-[11px] font-medium text-indigo-100">Verified milestones</p></div>
-                <div className="rounded-2xl bg-white/10 p-3 text-center ring-1 ring-white/15"><p className="text-2xl font-bold"><CountUp value={pending.length} /></p><p className="text-[11px] font-medium text-indigo-100">Awaiting approval</p></div>
+              <div className="ml-auto flex flex-wrap items-center gap-3">
+                <div className="flex items-baseline gap-2 rounded-2xl bg-white/10 px-4 py-2 ring-1 ring-white/15"><span className="text-2xl font-bold"><CountUp value={verified.length} /></span><span className="text-xs font-medium text-indigo-100">Verified</span></div>
+                <div className="flex items-baseline gap-2 rounded-2xl bg-white/10 px-4 py-2 ring-1 ring-white/15"><span className="text-2xl font-bold"><CountUp value={pending.length} /></span><span className="text-xs font-medium text-indigo-100">Awaiting approval</span></div>
               </div>
             </div>
-            <Card title="By category">
-              {cats.length === 0 ? <p className="text-sm text-slate-500">No verified milestones yet.</p> : (
-                <ul className="space-y-3">{cats.map(([c, n]) => (
-                  <li key={c}>
-                    <div className="mb-1 flex justify-between text-sm"><span className="font-semibold text-slate-700">{c}</span><span className="font-bold text-slate-900">{n}</span></div>
-                    <div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full origin-left animate-[grow_0.9s_ease-out_both] rounded-full bg-gradient-to-r from-indigo-600 to-cyan-glow" style={{ width: `${(n / verified.length) * 100}%` }} /></div>
-                  </li>
-                ))}</ul>
-              )}
-            </Card>
           </div>
 
-          <Card title="Achievements timeline" actions={<Badge className="bg-indigo-50 text-indigo-700 ring-indigo-200"><Target className="h-3 w-3" />Ready for review cycle</Badge>}>
+          {/* the timeline is the page */}
+          <section className="glass relative overflow-hidden rounded-[2rem] p-6 sm:p-9">
+            <span className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gradient-to-br from-indigo-300/30 to-cyan-glow/20 blur-3xl" />
+            <div className="relative mb-8 flex flex-wrap items-center gap-4">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-gradient text-white shadow-glow"><Award className="h-6 w-6" /></span>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Achievements timeline</h2>
+                <p className="text-sm text-slate-500">Every verified milestone, in order. This is what feeds the review cycle.</p>
+              </div>
+              <Badge className="bg-indigo-50 text-indigo-700 ring-indigo-200"><Target className="h-3 w-3" />Ready for review cycle</Badge>
+            </div>
+            {cats.length > 0 && (
+              <div className="relative mb-8 flex flex-wrap gap-2">
+                {cats.map(([c, n]) => <span key={c} className="rounded-full bg-white/80 px-3.5 py-1.5 text-xs font-bold text-slate-700 ring-1 ring-slate-200">{c} <span className="ml-1 rounded-full bg-indigo-600 px-1.5 py-0.5 text-[10px] text-white">{n}</span></span>)}
+              </div>
+            )}
             {shown.length === 0 ? (
               <Empty icon={<Award className="h-7 w-7" />} title="No milestones yet" hint="When HR tags this person on a story and their manager approves, it lands here." />
             ) : (
-              <ol className="relative ml-3 space-y-6 border-l-2 border-dashed border-indigo-100 pl-8">
+              <ol className="relative ml-5 space-y-8 border-l-[3px] border-indigo-100 pl-10 sm:ml-6 sm:pl-12">
                 {shown.map((a) => {
                   const s = STATUS[a.status];
                   return (
                     <li key={a.id} className="animate-fade-up relative">
-                      <span className={`absolute -left-[46px] top-0 grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br text-white shadow-md ring-4 ring-white ${s.node}`}><s.Icon className="h-[18px] w-[18px]" /></span>
-                      <div className="rounded-2xl bg-white/70 p-4 ring-1 ring-slate-200/70 transition-shadow hover:shadow-card">
+                      <span className={`absolute -left-[3.55rem] top-1 grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br text-white shadow-lg ring-[6px] ring-white sm:-left-[4.05rem] ${s.node}`}><s.Icon className="h-6 w-6" /></span>
+                      <div className="rounded-3xl bg-white/80 p-5 ring-1 ring-slate-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:p-6">
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge className={s.badge}>{s.label}</Badge>
                           <Badge className="bg-indigo-50 text-indigo-700 ring-indigo-200">{a.category}</Badge>
-                          <span className="ml-auto text-xs font-medium text-slate-400">{fmtDate(a.achieved_on)}</span>
+                          <span className="ml-auto text-sm font-semibold text-slate-400">{fmtDate(a.achieved_on)}</span>
                         </div>
-                        <p className="mt-2 text-base font-bold text-slate-900">{a.title}</p>
-                        {a.impact && <p className="mt-0.5 text-sm text-slate-600">{a.impact}</p>}
-                        {a.manager_comment && <p className="mt-3 flex gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs italic text-slate-600"><MessageSquareQuote className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-500" />{a.manager_comment}</p>}
-                        {a.post_id && <p className="mt-2 flex items-center gap-1.5 text-[11px] font-semibold text-indigo-600"><Link2 className="h-3 w-3" />Linked to a company news post</p>}
+                        <p className="mt-3 text-xl font-bold leading-snug text-slate-900 sm:text-2xl">{a.title}</p>
+                        {a.impact && <p className="mt-1.5 text-base text-slate-600">{a.impact}</p>}
+                        {a.manager_comment && <p className="mt-4 flex gap-2.5 rounded-2xl bg-slate-50 px-4 py-3 text-sm italic text-slate-600"><MessageSquareQuote className="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" />{a.manager_comment}</p>}
+                        {a.post_id && <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-indigo-600"><Link2 className="h-3.5 w-3.5" />Linked to a company news post</p>}
                       </div>
                     </li>
                   );
                 })}
               </ol>
             )}
-          </Card>
+          </section>
         </div>
       )}
     </>
