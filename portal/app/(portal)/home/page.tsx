@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
-import { ArrowRight, CalendarDays, Clock, Flame, Heart, ImagePlus, LayoutGrid, Lock, Megaphone, Newspaper, Plus, Trophy, TrendingUp } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowRight, CalendarDays, Clock, Flame, Heart, ImagePlus, LayoutGrid, Megaphone, Newspaper, Plus, Trophy, TrendingUp } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { greeting, ROLE_LABEL } from "@/lib/format";
-import { hueRgb } from "@/lib/icons";
-import type { AppItem, Post, PostCategory } from "@/lib/types";
+import type { Post, PostCategory } from "@/lib/types";
 import { PostCard } from "@/components/PostCard";
 import { PostComposer } from "@/components/PostComposer";
-import { AccessModal, AppIconTile, useAppOpener, useApps } from "@/components/Launcher";
+import { useApps } from "@/components/Launcher";
 import { Avatar, CountUp } from "@/components/fx/effects";
 import { Sparkles } from "@/components/fx/Sparkles";
 import { Button, Card, Empty, Skeleton, Tabs } from "@/components/ui";
@@ -59,56 +58,6 @@ function Hero({ name, role, stories, reactions, tools }: { name: string; role: s
         </div>
       </div>
     </section>
-  );
-}
-
-function QuickApps({ apps }: { apps: AppItem[] | null }) {
-  const { open, blocked, close } = useAppOpener();
-  const { refresh } = useSession();
-  const featured = apps?.filter((a) => a.featured) ?? [];
-  return (
-    <Card title="Your apps" actions={<Link href="/apps" className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800">All apps <ArrowRight className="h-3.5 w-3.5" /></Link>} padded={false}>
-      {!apps ? (
-        <div className="space-y-2 p-4">{[0, 1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-14" />)}</div>
-      ) : (
-        <ul className="p-2">
-          {featured.map((a) => (
-            <li key={a.id}>
-              <button onClick={() => open(a)} style={{ "--h": hueRgb(a.accessible ? a.hue : "slate") } as CSSProperties} className="row-hover group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left">
-                <span className="transition-transform duration-300 group-hover:scale-105"><AppIconTile app={a} size={42} locked={!a.accessible} /></span>
-                <span className="min-w-0 flex-1"><span className={`block truncate text-sm font-bold ${a.accessible ? "text-slate-900" : "text-slate-500"}`}>{a.name}</span><span className="block truncate text-xs text-slate-500">{a.accessible ? a.tagline : "Request access"}</span></span>
-                {a.accessible ? <ArrowRight className="h-4 w-4 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-indigo-500" /> : <Lock className="h-4 w-4 text-slate-300" />}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <AccessModal app={blocked} onClose={close} onSent={refresh} />
-    </Card>
-  );
-}
-
-/** Who has been recognised most in the stories on the feed. */
-function Spotlight({ posts }: { posts: Post[] }) {
-  const top = useMemo(() => {
-    const m = new Map<number, { id: number; name: string; title: string | null; avatar_url?: string | null; count: number }>();
-    for (const p of posts) for (const t of p.tagged) { const e = m.get(t.id) ?? { ...t, count: 0 }; e.count++; m.set(t.id, e); }
-    return [...m.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)).slice(0, 4);
-  }, [posts]);
-  if (top.length === 0) return null;
-  return (
-    <Card title={<span className="flex items-center gap-2"><Trophy className="h-4 w-4 text-gold-500" />Spotlight</span>} padded={false}>
-      <p className="px-5 pt-3 text-xs text-slate-500">People recognised in recent stories</p>
-      <ul className="p-2">
-        {top.map((p, i) => (
-          <li key={p.id} className="flex items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors hover:bg-amber-50/60">
-            <span className="relative"><Avatar name={p.name} src={p.avatar_url} size={40} />{i === 0 && <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-gradient-to-br from-gold-500 to-gold-300 text-white ring-2 ring-white"><Trophy className="h-2.5 w-2.5" /></span>}</span>
-            <span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold text-slate-900">{p.name}</span><span className="block truncate text-xs text-slate-500">{p.title}</span></span>
-            <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700 ring-1 ring-inset ring-amber-200">{p.count} {p.count === 1 ? "story" : "stories"}</span>
-          </li>
-        ))}
-      </ul>
-    </Card>
   );
 }
 
@@ -195,7 +144,7 @@ export default function HomePage() {
         tools={(apps ?? []).filter((a) => a.accessible).length}
       />
 
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="mx-auto w-full max-w-4xl">
         <div className="min-w-0 rounded-[2rem] bg-gradient-to-br from-indigo-400/70 via-cyan-glow/50 to-gold-400/60 p-[1.5px] shadow-[0_40px_90px_-50px_rgb(47_115_245/0.7)]">
          <div className="min-w-0 space-y-5 rounded-[calc(2rem-1.5px)] bg-white/70 p-4 backdrop-blur-xl sm:p-6">
           <div className="flex items-center gap-3">
@@ -236,10 +185,6 @@ export default function HomePage() {
          </div>
         </div>
 
-        <aside className="space-y-6 xl:sticky xl:top-20 xl:-mr-2 xl:max-h-[calc(100vh-6.5rem)] xl:overflow-y-auto xl:overscroll-contain xl:py-1 xl:pb-4 xl:pr-2">
-          <QuickApps apps={apps} />
-          {published.length > 0 && <Spotlight posts={published} />}
-        </aside>
       </div>
 
       {composer && <PostComposer post={composer.post} defaultCategory={composer.category} onClose={() => setComposer(null)} onSaved={changed} />}
