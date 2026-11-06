@@ -232,6 +232,8 @@ export function Shell({ children }: { children: ReactNode }) {
   }
 
   const items = NAV.filter((n) => !n.roles || n.roles.includes(user.role));
+  // Home has no side menu: the feed gets the width and the links live in the top bar
+  const wide = pathname === "/home";
   const isActive = (href: string) => (href === "/apps" ? pathname === "/apps" : pathname.startsWith(href));
 
   const sidebar = (
@@ -266,25 +268,41 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <>
       <div className="aurora" />
-      <div className="min-h-screen min-w-0 md:pl-72">
-        <aside className="glass-strong fixed bottom-4 left-4 top-4 z-30 hidden w-64 overflow-hidden rounded-3xl md:block">{sidebar}</aside>
+      <div className={`min-h-screen min-w-0 ${wide ? "" : "md:pl-72"}`}>
+        {!wide && <aside className="glass-strong fixed bottom-4 left-4 top-4 z-30 hidden w-64 overflow-hidden rounded-3xl md:block">{sidebar}</aside>}
         {menuOpen && (
-          <div className="fixed inset-0 z-40 md:hidden">
+          <div className={`fixed inset-0 z-40 ${wide ? "lg:hidden" : "md:hidden"}`}>
             <div className="animate-fade-in absolute inset-0 bg-slate-950/50 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
             <aside className="glass-strong animate-slide-in absolute inset-y-3 left-3 w-72 overflow-hidden rounded-3xl">{sidebar}</aside>
           </div>
         )}
         <header className="sticky top-0 z-20 flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
           <div className="glass-strong flex w-full max-w-7xl items-center gap-3 rounded-2xl px-3 py-2 sm:mx-auto">
-            <button onClick={() => setMenuOpen((o) => !o)} aria-label="Menu" className="rounded-lg p-1.5 text-slate-600 hover:bg-slate-900/5 md:hidden">{menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
-            <button onClick={() => setPaletteOpen(true)} aria-label="Search apps and pages" className="group relative min-w-0 flex-1 rounded-2xl bg-gradient-to-r from-slate-200 via-indigo-200 to-cyan-glow/50 p-px text-left shadow-sm transition-all duration-300 hover:from-indigo-500 hover:via-cyan-glow hover:to-gold-400 sm:max-w-md">
+            <button onClick={() => setMenuOpen((o) => !o)} aria-label="Menu" className={`rounded-lg p-1.5 text-slate-600 hover:bg-slate-900/5 ${wide ? "lg:hidden" : "md:hidden"}`}>{menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
+            {wide && (
+              <>
+                <Link href="/home" aria-label="Home" className="hidden shrink-0 pl-1 sm:block"><Logo height={28} priority /></Link>
+                <nav className="hidden items-center gap-1 lg:flex">
+                  {items.map(({ href, label, icon: Icon }) => {
+                    const active = isActive(href);
+                    return (
+                      <Link key={href} href={href} className={`relative flex items-center gap-2 rounded-xl px-3 py-2 text-[13px] font-semibold transition-all duration-200 ${active ? "bg-brand-gradient text-white shadow-glow" : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"}`}>
+                        <Icon className="h-4 w-4" />{label}
+                        {href === "/approvals" && waiting > 0 && <span className={`grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] font-bold ${active ? "bg-white/25 text-white" : "bg-rose-500 text-white"}`}>{waiting}</span>}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </>
+            )}
+            <button onClick={() => setPaletteOpen(true)} aria-label="Search apps and pages" className={`group relative min-w-0 flex-1 rounded-2xl bg-gradient-to-r from-slate-200 via-indigo-200 to-cyan-glow/50 p-px text-left shadow-sm transition-all duration-300 hover:from-indigo-500 hover:via-cyan-glow hover:to-gold-400 ${wide ? "ml-auto sm:max-w-[16rem]" : "sm:max-w-md"}`}>
               <span className="flex items-center gap-3 rounded-[15px] bg-white py-2 pl-2 pr-3">
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-brand-gradient text-white shadow-md transition-transform duration-300 group-hover:scale-110"><Search className="h-4 w-4" /></span>
                 <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-700">Search apps and pages</span>
                 <span className="hidden items-center gap-1 sm:flex"><kbd className="rounded-md bg-slate-100 px-1.5 py-1 text-[11px] font-bold text-slate-500 ring-1 ring-slate-200">Ctrl</kbd><kbd className="rounded-md bg-slate-100 px-1.5 py-1 text-[11px] font-bold text-slate-500 ring-1 ring-slate-200">K</kbd></span>
               </span>
             </button>
-            <div className="ml-auto flex items-center gap-2">
+            <div className={`${wide ? "" : "ml-auto"} flex items-center gap-2`}>
               <RoleSwitcher />
               <span className="mx-1 hidden h-6 w-px bg-slate-200 lg:block" />
               <Notifications />

@@ -30,7 +30,7 @@ function Hero({ name, role, stories, reactions, tools }: { name: string; role: s
       <div className="dot-grid absolute inset-0 opacity-[0.12]" />
       <Sparkles />
       <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "repeating-linear-gradient(115deg, #fff 0 1px, transparent 1px 90px)" }} />
-      <div className="relative grid items-center gap-8 p-7 sm:p-9 xl:grid-cols-[1fr_auto]">
+      <div className="relative grid items-center gap-6 p-5 sm:p-7 xl:grid-cols-[1fr_auto]">
         <div>
           <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-indigo-100 ring-1 ring-white/20 backdrop-blur">
             <CalendarDays className="h-3.5 w-3.5 text-gold-300" />{today}<span className="text-white/40">·</span>{role}
@@ -195,8 +195,14 @@ export default function HomePage() {
         tools={(apps ?? []).filter((a) => a.accessible).length}
       />
 
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="min-w-0 space-y-5">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0 rounded-[2rem] bg-gradient-to-br from-indigo-400/70 via-cyan-glow/50 to-gold-400/60 p-[1.5px] shadow-[0_40px_90px_-50px_rgb(47_115_245/0.7)]">
+         <div className="min-w-0 space-y-5 rounded-[calc(2rem-1.5px)] bg-white/70 p-4 backdrop-blur-xl sm:p-6">
+          <div className="flex items-center gap-3">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-gradient text-white shadow-glow"><Newspaper className="h-5 w-5" /></span>
+            <div className="min-w-0 flex-1"><h2 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Company feed</h2><p className="text-xs text-slate-500">News, wins and announcements from across Infinyty</p></div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-inset ring-emerald-200"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />Live</span>
+          </div>
           {tab === "announcements"
             ? user.role === "founder" && <AnnounceBar onOpen={() => setComposer({ category: "announcement" })} />
             : <ComposerBar onOpen={() => setComposer({})} />}
@@ -227,6 +233,7 @@ export default function HomePage() {
           ) : (
             <div className="stagger space-y-5">{feed.map((p, i) => <PostCard key={p.id} post={p} rank={tab === "trending" && filter === "all" ? i + 1 : undefined} onChanged={changed} onEdit={(post) => setComposer({ post })} />)}</div>
           )}
+         </div>
         </div>
 
         <aside className="space-y-6 xl:sticky xl:top-20 xl:-mr-2 xl:max-h-[calc(100vh-6.5rem)] xl:overflow-y-auto xl:overscroll-contain xl:py-1 xl:pb-4 xl:pr-2">
