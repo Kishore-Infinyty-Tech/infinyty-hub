@@ -2,6 +2,7 @@ import { createHmac, randomBytes, scrypt as scryptCb, timingSafeEqual } from "no
 import { promisify } from "node:util";
 import { cookies } from "next/headers";
 import { q } from "./db";
+import { companyEmail } from "./email";
 import type { User } from "./types";
 
 const scrypt = promisify(scryptCb) as (pw: string, salt: string, len: number) => Promise<Buffer>;
@@ -55,7 +56,7 @@ export async function currentUser(): Promise<(User & { phone: string | null }) |
   const good = mac && sign(payload).length === mac.length && timingSafeEqual(Buffer.from(sign(payload)), Buffer.from(mac));
   if (!good || Number(exp) < Date.now()) return null;
   const [u] = await q<User & { phone: string | null }>(`select ${USER_COLS} from portal.users where id = $1`, [Number(id)]);
-  return u ?? null;
+  return u ? { ...u, email: companyEmail(u.email) } : null;
 }
 
 export const demoMode = () => process.env.DEMO_MODE === "1";

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BadgeCheck, Building2, Camera, CircleDashed, ImagePlus, KeyRound, LayoutGrid, Loader2, LogOut, Mail, MessageCircle, Newspaper, ShieldCheck, Trash2, UserRound, Users } from "lucide-react";
 import { api, useSession } from "@/lib/session";
+import { PersonLink } from "@/components/PersonLink";
 import { ROLE_LABEL, timeAgo } from "@/lib/format";
 import { compressImage, fmtBytes } from "@/lib/compress";
 import { appIcon, hue } from "@/lib/icons";
@@ -228,14 +229,14 @@ export default function ProfilePage() {
               <div>
                 <p className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">Reports to</p>
                 {extra.manager ? (
-                  <div className="flex items-center gap-3"><Avatar name={extra.manager.name} src={extra.manager.avatar_url} size={36} /><div><p className="text-sm font-bold text-slate-900">{extra.manager.name}</p><p className="text-xs text-slate-500">{extra.manager.title}</p></div></div>
+                  <div className="flex items-center gap-3"><Avatar name={extra.manager.name} src={extra.manager.avatar_url} size={36} /><div><p className="text-sm font-bold text-slate-900"><PersonLink id={extra.manager.id}>{extra.manager.name}</PersonLink></p><p className="text-xs text-slate-500">{extra.manager.title}</p></div></div>
                 ) : <p className="text-sm text-slate-500">No manager on record.</p>}
               </div>
               {extra.reports.length > 0 && (
                 <div>
                   <p className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400"><Users className="h-3.5 w-3.5" />Direct reports ({extra.reports.length})</p>
                   <ul className="grid gap-2 sm:grid-cols-2">{extra.reports.map((r) => (
-                    <li key={r.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 p-2 ring-1 ring-slate-200/60"><Avatar name={r.name} src={r.avatar_url} size={30} /><div className="min-w-0"><p className="truncate text-xs font-bold text-slate-900">{r.name}</p><p className="truncate text-[11px] text-slate-500">{r.title}</p></div></li>
+                    <li key={r.id} className="flex items-center gap-2.5 rounded-xl bg-slate-50 p-2 ring-1 ring-slate-200/60"><Avatar name={r.name} src={r.avatar_url} size={30} /><div className="min-w-0"><p className="truncate text-xs font-bold text-slate-900"><PersonLink id={r.id}>{r.name}</PersonLink></p><p className="truncate text-[11px] text-slate-500">{r.title}</p></div></li>
                   ))}</ul>
                 </div>
               )}

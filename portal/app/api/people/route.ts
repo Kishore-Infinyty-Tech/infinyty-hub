@@ -1,6 +1,7 @@
 import { fail, json, q } from "@/lib/db";
 import { currentUser, hashPassword } from "@/lib/auth";
-import { ASSIGNABLE, CAN_MANAGE, tempPassword, validEmail } from "@/lib/people";
+import { ASSIGNABLE, CAN_MANAGE, tempPassword } from "@/lib/people";
+import { COMPANY_DOMAIN, companyEmail, emailName } from "@/lib/email";
 import type { Role } from "@/lib/types";
 
 /** The people directory for those who manage people (Founder, HR Admin, Manager). */
@@ -8,13 +9,14 @@ export async function GET() {
   const me = await currentUser();
   if (!me) return fail("Sign in first", 401);
   if (me.role === "employee") return fail("Not allowed", 403);
-  const people = await q(
+  const rows = await q<{ email: string }>(
     `select u.id, u.name, u.email, u.role, u.title, u.department, u.manager_id, u.avatar_url, m.name as manager_name,
             (u.password_hash is not null) as has_login, u.last_login_at,
             (select count(*)::int from portal.users r where r.manager_id = u.id) as reports
        from portal.users u left join portal.users m on m.id = u.manager_id
       order by case u.role when 'founder' then 0 when 'hr_admin' then 1 when 'manager' then 2 else 3 end, u.name`,
   );
+  const people = rows.map((r) => ({ ...r, email: companyEmail(r.email) }));
   return json({ people, assignable: ASSIGNABLE[me.role] });
 }
 
@@ -27,10 +29,11 @@ export async function POST(req: Request) {
 
   const b = await req.json().catch(() => ({}));
   const name = String(b.name ?? "").trim();
-  const email = String(b.email ?? "").trim().toLowerCase();
+  const local = emailName(String(b.email ?? ""));
+  const email = `${local}@${COMPANY_DOMAIN}`;
   const role = b.role as Role;
   if (name.length < 2) return fail("Enter the person's full name");
-  if (!validEmail(email)) return fail("Enter a valid email address");
+  if (!/^[a-z0-9][a-z0-9._-]*$/.test(local)) return fail(`Enter the name part of the email, for example priya (it ends with @${COMPANY_DOMAIN})`);
   if (!allowed.includes(role)) return fail(`You can only assign: ${allowed.join(", ")}`, 403);
 
   // managers always add to their own team; everyone else picks the manager
@@ -40,7 +43,7 @@ export async function POST(req: Request) {
     const [m] = await q<{ role: Role }>(`select role from portal.users where id = $1`, [managerId]);
     if (!m || !CAN_MANAGE.includes(m.role)) return fail("That person cannot be a manager");
   }
-  if ((await q(`select 1 from portal.users where lower(email) = $1`, [email])).length) return fail("Someone with that email already exists", 409);
+  if ((await q(`select 1 from portal.users where split_part(lower(email), '@', 1) = $1`, [local])).length) return fail("Someone with that email already exists", 409);
 
   const pw = tempPassword();
   const [row] = await q<{ id: number }>(

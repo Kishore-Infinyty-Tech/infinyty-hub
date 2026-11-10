@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { PersonLink } from "@/components/PersonLink";
 import { Briefcase, Check, Copy, Crown, KeyRound, Mail, Pencil, Search, ShieldCheck, UserPlus, Users } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { ROLE_LABEL, timeAgo } from "@/lib/format";
@@ -106,7 +108,7 @@ function PersonForm({ mode, people, assignable, person, onClose, onSaved }: { mo
           {error && <ErrorNote message={error} />}
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Full name"><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Priya Sharma" autoFocus /></Field>
-            <Field label="Work email" hint={mode === "edit" ? "Email is their login and cannot be changed here." : undefined}><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={mode === "edit"} placeholder="priya@company.com" /></Field>
+            <Field label="Work email" hint={mode === "edit" ? "Email is their login and cannot be changed here." : "Every work email ends with @infinyty.tech"}><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={mode === "edit"} placeholder="priya@infinyty.tech" /></Field>
             <Field label="Role" hint={editingSelf ? "You cannot change your own role." : undefined}>
               <Select value={role} onChange={(e) => setRole(e.target.value as Role)} disabled={editingSelf}>
                 {roleChoices.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
@@ -156,9 +158,9 @@ export default function PeoplePage() {
   const renderCard = (p: Person) => (
       <article key={p.id} className={`glass hover-lift group flex h-full flex-col rounded-3xl p-5 ${p.id === user?.id ? "ring-2 ring-indigo-200" : ""}`}>
         <div className="flex items-start gap-3.5">
-          <Avatar name={p.name} src={p.avatar_url} size={52} />
+          <Link href={`/people/${p.id}`} aria-label={`Open ${p.name}'s profile`}><Avatar name={p.name} src={p.avatar_url} size={52} /></Link>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-base font-bold leading-tight text-slate-900">{p.name}</p>
+            <p className="truncate text-base font-bold leading-tight text-slate-900"><PersonLink id={p.id}>{p.name}</PersonLink></p>
             <p className="mt-0.5 truncate text-sm text-slate-600">{p.title ?? "—"}</p>
             <p className="truncate text-xs text-slate-400">{p.department ?? "—"}</p>
           </div>

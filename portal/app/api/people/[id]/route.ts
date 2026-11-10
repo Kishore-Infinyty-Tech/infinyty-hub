@@ -1,6 +1,7 @@
 import { fail, json, q } from "@/lib/db";
 import { currentUser, hashPassword } from "@/lib/auth";
 import { ASSIGNABLE, CAN_MANAGE, tempPassword } from "@/lib/people";
+import { companyEmail, type OrgNode } from "@/lib/email";
 import type { Role } from "@/lib/types";
 
 /** Edit a person's role, manager, title or department, or reset their password. Founder and HR Admin only. */
@@ -37,4 +38,49 @@ export async function PATCH(req: Request, ctx: RouteContext<"/api/people/[id]">)
   if (b.reset_password) { temp = tempPassword(); params.push(await hashPassword(temp)); fields.push(`password_hash = $${params.length}`); }
   await q(`update portal.users set ${fields.join(", ")} where id = $1`, params);
   return json({ ok: true, temp_password: temp });
+}
+
+interface Row { id: number; name: string; email: string; role: Role; title: string | null; department: string | null; manager_id: number | null; avatar_url: string | null; cover_url: string | null }
+
+/** A person's public profile and where they sit in the organisation. Any signed-in person can see it. */
+export async function GET(_req: Request, ctx: RouteContext<"/api/people/[id]">) {
+  const me = await currentUser();
+  if (!me) return fail("Sign in first", 401);
+  const id = Number((await ctx.params).id);
+  if (!Number.isInteger(id)) return fail("Person not found", 404);
+
+  // the whole company is small, so load everyone once and walk the reporting lines in memory
+  const all = await q<Row>(`select id, name, email, role, title, department, manager_id, avatar_url, cover_url from portal.users`);
+  const byId = new Map(all.map((r) => [r.id, r]));
+  const person = byId.get(id);
+  if (!person) return fail("Person not found", 404);
+
+  const node = (r: Row): Omit<OrgNode, "reports"> => ({ id: r.id, name: r.name, title: r.title, department: r.department, role: r.role, avatar_url: r.avatar_url });
+  const kids = new Map<number, Row[]>();
+  for (const r of all) if (r.manager_id) kids.set(r.manager_id, [...(kids.get(r.manager_id) ?? []), r]);
+  const seen = new Set<number>();
+  const below = (r: Row): OrgNode => {
+    seen.add(r.id);
+    const sorted = (kids.get(r.id) ?? []).filter((k) => !seen.has(k.id)).sort((a, b) => a.name.localeCompare(b.name));
+    return { ...node(r), reports: sorted.map(below) };
+  };
+  // people above them, nearest manager last in the list (top of the company first)
+  const chain: Omit<OrgNode, "reports">[] = [];
+  for (let cur = person.manager_id ? byId.get(person.manager_id) : undefined, guard = 0; cur && guard < 20; cur = cur.manager_id ? byId.get(cur.manager_id) : undefined, guard++) chain.unshift(node(cur));
+
+  const tree = below(person);
+  const count = (n: OrgNode): number => n.reports.reduce((t, c) => t + 1 + count(c), 0);
+  const achievements = await q(
+    `select id, title, category, impact, achieved_on from portal.achievements where user_id = $1 and status = 'approved' order by achieved_on desc limit 5`,
+    [id],
+  );
+  return json({
+    person: { ...node(person), email: companyEmail(person.email), cover_url: person.cover_url, manager_id: person.manager_id },
+    above: chain,
+    tree,
+    team_size: count(tree),
+    direct_reports: tree.reports.length,
+    achievements,
+    is_me: person.id === me.id,
+  });
 }

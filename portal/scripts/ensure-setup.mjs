@@ -66,5 +66,5 @@ if (rows[0].ready) {
   } else {
     console.log("Photo storage (B2_* in portal\\.env.local) is not set, so photo uploads and the demo news photos are off for now.");
   }
-  console.log("\nSign in with aditi@infinityanalyticsconsulting.com and the password Infinyty@2026 (every demo account uses that password).");
+  console.log("\nSign in with aditi@infinyty.tech and the password Infinyty@2026 (every demo account uses that password).");
 }

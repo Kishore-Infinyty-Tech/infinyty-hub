@@ -73,7 +73,7 @@ export default function LoginPage() {
             <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Email</span>
             <span className={wrap}>
               <span className={tile}><Mail className="h-[18px] w-[18px]" /></span>
-              <input suppressHydrationWarning type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required autoFocus placeholder="you@company.com" className={`${input} pr-4`} />
+              <input suppressHydrationWarning type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required autoFocus placeholder="name@infinyty.tech" className={`${input} pr-4`} />
             </span>
           </label>
 

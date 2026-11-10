@@ -12,6 +12,7 @@ export interface PendingMilestone {
   manager_comment: string | null;
   achieved_on: string;
   created_at: string;
+  employee_id: number;
   employee_name: string;
   employee_title: string | null;
   employee_department: string | null;
@@ -40,7 +41,7 @@ export async function GET() {
   const milestones = await q<PendingMilestone>(
     `select a.id, a.user_id, a.post_id, a.title, a.category, a.impact, a.status,
             a.manager_comment, a.achieved_on, a.created_at,
-            u.name as employee_name, u.title as employee_title, u.department as employee_department,
+            a.user_id as employee_id, u.name as employee_name, u.title as employee_title, u.department as employee_department,
             u.avatar_url as employee_avatar, u.manager_id,
             m.name as manager_name,
             p.title as post_title, p.body as post_body, p.images as post_images,

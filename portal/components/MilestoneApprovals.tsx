@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { PersonLink } from "./PersonLink";
 import {
   Award,
   CheckCircle2,
@@ -112,14 +113,14 @@ export function MilestoneApprovals() {
                     <Avatar name={m.employee_name} src={m.employee_avatar} size={42} ring />
                     <div className="min-w-0">
                       <p className="truncate text-sm font-bold text-slate-900">
-                        {m.employee_name}
+                        <PersonLink id={m.employee_id}>{m.employee_name}</PersonLink>
                       </p>
                       <p className="text-xs text-slate-500">
                         {m.employee_title} · {m.employee_department}
                         {isGlobalModerator && m.manager_name ? (
                           <span className="font-semibold text-indigo-600">
                             {" "}
-                            (Reports to: {m.manager_name})
+                            (Reports to: <PersonLink id={m.manager_id}>{m.manager_name}</PersonLink>)
                           </span>
                         ) : null}
                       </p>

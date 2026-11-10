@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { PersonLink } from "./PersonLink";
 import { Check, CheckCircle2, MessageSquareText, X } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { CATEGORY, timeAgo } from "@/lib/format";
@@ -44,7 +45,7 @@ export function PostApprovals() {
               <div className="flex items-center gap-3 px-4 pt-4">
                 <Avatar name={p.author_name ?? "?"} src={p.author_avatar} size={40} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-bold text-slate-900">{p.author_name}</p>
+                  <p className="truncate text-sm font-bold text-slate-900"><PersonLink id={p.author_id}>{p.author_name}</PersonLink></p>
                   <p className="text-xs text-slate-500">{p.author_title} · sent {timeAgo(p.published_at)}{p.updated_at ? " · edited" : ""}</p>
                 </div>
                 {p.category !== "update" && <Badge className={CATEGORY[p.category].badge}>{CATEGORY[p.category].label}</Badge>}

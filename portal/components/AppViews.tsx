@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { PersonLink } from "./PersonLink";
 import { Award, BadgeCheck, CircleDashed, ExternalLink, FlaskConical, Link2, Loader2, MessageSquareQuote, Power, RefreshCw, Target } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { fmtDate } from "@/lib/format";
@@ -110,7 +111,7 @@ export function PerformanceView({ app }: { app: AppItem }) {
               <div className="flex min-w-0 items-center gap-4">
                 <Avatar name={data.user.name} src={data.user.avatar_url} size={56} ring />
                 <div className="min-w-0">
-                  <p className="truncate text-lg font-bold leading-tight">{data.user.name}</p>
+                  <p className="truncate text-lg font-bold leading-tight"><PersonLink id={data.user.id}>{data.user.name}</PersonLink></p>
                   <p className="truncate text-sm text-indigo-100">{data.user.title}</p>
                   <p className="truncate text-xs text-cyan-glow">{data.user.department}{data.user.manager_name ? ` · reports to ${data.user.manager_name}` : ""}</p>
                 </div>

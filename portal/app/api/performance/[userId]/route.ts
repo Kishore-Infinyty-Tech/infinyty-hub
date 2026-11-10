@@ -1,9 +1,10 @@
 import { json, q } from "@/lib/db";
+import { companyEmail } from "@/lib/email";
 
 /** Verified milestones for one person (plus those still waiting on the manager). */
 export async function GET(_req: Request, ctx: RouteContext<"/api/performance/[userId]">) {
   const { userId } = await ctx.params;
-  const [user] = await q(
+  const [user] = await q<{ email: string }>(
     `select u.id, u.name, u.title, u.department, u.email, u.avatar_url, u.cover_url, m.name as manager_name
        from portal.users u left join portal.users m on m.id = u.manager_id where u.id = $1`,
     [userId],
@@ -13,5 +14,5 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/performance/[us
        from portal.achievements where user_id = $1 order by achieved_on desc`,
     [userId],
   );
-  return json({ user: user ?? null, achievements });
+  return json({ user: user ? { ...user, email: companyEmail(user.email) } : null, achievements });
 }

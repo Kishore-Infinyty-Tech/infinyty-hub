@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Award, Clock, Flame, Heart, Megaphone, MessageCircle, MoreHorizontal, PartyPopper, Pencil, Pin, Send, Sparkles, ThumbsUp, Trash2, TrendingUp, XCircle } from "lucide-react";
 import { api, useSession } from "@/lib/session";
+import { PersonLink } from "./PersonLink";
 import { CATEGORY, timeAgo } from "@/lib/format";
 import type { Post, PostComment } from "@/lib/types";
 import { Avatar } from "./fx/effects";
@@ -57,7 +58,7 @@ function Comments({ postId, onChanged }: { postId: number; onChanged: () => void
         <div key={c.id} className="group/c flex gap-3">
           <Avatar name={c.user_name} src={c.user_avatar} size={32} />
           <div className="min-w-0 rounded-2xl rounded-tl-md bg-white px-3.5 py-2 ring-1 ring-slate-200/70">
-            <p className="text-xs font-bold text-slate-900">{c.user_name} <span className="font-medium text-slate-400">· {timeAgo(c.created_at)}</span></p>
+            <p className="text-xs font-bold text-slate-900"><PersonLink id={c.user_id}>{c.user_name}</PersonLink> <span className="font-medium text-slate-400">· {timeAgo(c.created_at)}</span></p>
             <p className="text-sm text-slate-700">{c.body}</p>
           </div>
           {c.can_delete && <button onClick={() => remove(c.id)} aria-label="Delete comment" className="self-center rounded-lg p-1.5 text-slate-300 opacity-0 transition-all hover:bg-rose-50 hover:text-rose-600 group-hover/c:opacity-100"><Trash2 className="h-3.5 w-3.5" /></button>}
@@ -145,7 +146,7 @@ export function PostCard({ post, onChanged, onEdit, rank }: { post: Post; onChan
       <header className="flex items-center gap-3 px-5 pb-3 pt-5">
         <Avatar name={post.author_name ?? "Infinyty"} src={post.author_avatar} size={44} />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-bold text-slate-900">{post.author_name ?? "Company"}{post.author_title ? <span className="font-medium text-slate-400"> · {post.author_title}</span> : null}</p>
+          <p className="truncate text-sm font-bold text-slate-900"><PersonLink id={post.author_id}>{post.author_name ?? "Company"}</PersonLink>{post.author_title ? <span className="font-medium text-slate-400"> · {post.author_title}</span> : null}</p>
           <p className="text-xs text-slate-500">{timeAgo(post.published_at)}{post.updated_at ? " · edited" : ""}{post.source === "whatsapp" ? " · via WhatsApp" : ""}</p>
         </div>
         {post.pinned && <Badge className="bg-amber-50 text-amber-700 ring-amber-200"><Pin className="h-3 w-3" />Pinned</Badge>}
@@ -161,7 +162,7 @@ export function PostCard({ post, onChanged, onEdit, rank }: { post: Post; onChan
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Major contributors</span>
             {post.tagged.map((t) => (
-              <span key={t.id} className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 py-0.5 pl-0.5 pr-2.5 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100"><Avatar name={t.name} src={t.avatar_url} size={22} />{t.name}</span>
+              <span key={t.id} className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 py-0.5 pl-0.5 pr-2.5 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100"><Avatar name={t.name} src={t.avatar_url} size={22} /><PersonLink id={t.id}>{t.name}</PersonLink></span>
             ))}
           </div>
         )}

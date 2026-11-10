@@ -78,17 +78,17 @@ create table portal.notifications (
 // login: "real" = a real teammate with a temporary password, "dummy" = demo employee, null = directory entry only (cannot sign in)
 const users = [
   // name, email, role, title, dept, manager email, login
-  ["Aditi Vad", "aditi@infinityanalyticsconsulting.com", "founder", "Founder", "Leadership", null, "real"],
-  ["Aayush Mahendru", "aayush@infinityanalyticsconsulting.com", "founder", "Founder", "Leadership", null, "real"],
-  ["Kishore Reddy R", "kishore@infinityanalyticsconsulting.com", "hr_admin", "HR Admin", "Human Resources", "aditi@infinityanalyticsconsulting.com", "real"],
-  ["Dhanush", "dhanush@infinityanalyticsconsulting.com", "manager", "Manager", "Operations", "aayush@infinityanalyticsconsulting.com", "real"],
-  ["Rhea Kapoor", "rhea@infinity.demo", "manager", "Engineering Manager", "Technology", "aditi@infinityanalyticsconsulting.com", null],
-  ["Alex Johnson", "alex@infinity.demo", "employee", "Senior Account Executive", "Sales & Delivery", "dhanush@infinityanalyticsconsulting.com", "dummy"],
-  ["Neha Iyer", "neha@infinity.demo", "employee", "Business Development Lead", "Sales & Delivery", "dhanush@infinityanalyticsconsulting.com", "dummy"],
-  ["Sana Qureshi", "sana@infinity.demo", "employee", "Regional Operations Lead", "Operations", "dhanush@infinityanalyticsconsulting.com", "dummy"],
-  ["Meera Pillai", "meera@infinity.demo", "employee", "Talent Partner", "Human Resources", "dhanush@infinityanalyticsconsulting.com", "dummy"],
-  ["Vikram Rao", "vikram@infinity.demo", "employee", "Solutions Architect", "Technology", "rhea@infinity.demo", "dummy"],
-  ["Arjun Nair", "arjun@infinity.demo", "employee", "Data Engineer", "Technology", "rhea@infinity.demo", "dummy"],
+  ["Aditi Vad", "aditi@infinyty.tech", "founder", "Founder", "Leadership", null, "real"],
+  ["Aayush Mahendru", "aayush@infinyty.tech", "founder", "Founder", "Leadership", null, "real"],
+  ["Kishore Reddy R", "kishore@infinyty.tech", "hr_admin", "HR Admin", "Human Resources", "aditi@infinyty.tech", "real"],
+  ["Dhanush", "dhanush@infinyty.tech", "manager", "Manager", "Operations", "aayush@infinyty.tech", "real"],
+  ["Rhea Kapoor", "rhea@infinyty.tech", "manager", "Engineering Manager", "Technology", "aditi@infinyty.tech", null],
+  ["Alex Johnson", "alex@infinyty.tech", "employee", "Senior Account Executive", "Sales & Delivery", "dhanush@infinyty.tech", "dummy"],
+  ["Neha Iyer", "neha@infinyty.tech", "employee", "Business Development Lead", "Sales & Delivery", "dhanush@infinyty.tech", "dummy"],
+  ["Sana Qureshi", "sana@infinyty.tech", "employee", "Regional Operations Lead", "Operations", "dhanush@infinyty.tech", "dummy"],
+  ["Meera Pillai", "meera@infinyty.tech", "employee", "Talent Partner", "Human Resources", "dhanush@infinyty.tech", "dummy"],
+  ["Vikram Rao", "vikram@infinyty.tech", "employee", "Solutions Architect", "Technology", "rhea@infinyty.tech", "dummy"],
+  ["Arjun Nair", "arjun@infinyty.tech", "employee", "Data Engineer", "Technology", "rhea@infinyty.tech", "dummy"],
 ];
 const uid = {};
 const issued = [];
@@ -195,6 +195,6 @@ await db.query("insert into portal.notifications(user_id,title,body,href) values
 
 console.log("\nTEMPORARY PASSWORDS (shown once, change them on the Profile page):");
 for (const [n, e, r] of issued) console.log(`  ${r.padEnd(9)} ${n.padEnd(16)} ${e}`);
-console.log(`  dummy employees (alex, neha, sana, meera, vikram, arjun @infinity.demo): ${DUMMY_PASSWORD}\n`);
+console.log(`  dummy employees (alex, neha, sana, meera, vikram, arjun @infinyty.tech): ${DUMMY_PASSWORD}\n`);
 console.log("portal schema ready:", (await db.query("select (select count(*) from portal.users) u,(select count(*) from portal.apps) a,(select count(*) from portal.posts) p")).rows[0]);
 await db.end();
