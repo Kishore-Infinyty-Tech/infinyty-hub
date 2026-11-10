@@ -2,3 +2,5 @@ node_modules
 .next
 .env.local
 *.tsbuildinfo
+
+whatsapp_ingestion_05_11_2026_backup.docx
