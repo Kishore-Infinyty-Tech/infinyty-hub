@@ -133,7 +133,7 @@ const CHAT_MESSAGES = [
     color: "#5e35b1",
     text: "Congrats!",
     time: "10:27 AM",
-    dividerAfter: true,
+    dateDividerAfter: "Today",
   },
   {
     sender: "Karan Mehra",
@@ -414,12 +414,19 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                   backgroundPosition: "0 0, 8px 8px",
                 }}
               >
+                {/* Top Date Chip */}
+                <div className="flex justify-center pt-1 pb-2">
+                  <span className="rounded-lg bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 shadow-sm ring-1 ring-black/5">
+                    Yesterday
+                  </span>
+                </div>
+
                 {CHAT_MESSAGES.map((msg, idx) => {
                   const userObj = users.find((u) =>
                     u.name.toLowerCase().includes(msg.sender.toLowerCase().split(" ")[0]),
                   );
                   return (
-                    <div key={idx} className="space-y-2">
+                    <div key={idx} className={msg.reaction ? "pb-2" : "space-y-2"}>
                       <div className="flex items-start gap-2">
                         <Avatar
                           name={msg.sender}
@@ -427,7 +434,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                           size={28}
                           className="!rounded-full shrink-0 shadow-sm mt-0.5"
                         />
-                        <div className="group relative flex flex-col items-start">
+                        <div className="relative flex flex-col items-start">
                           <div className="relative rounded-2xl rounded-tl-sm bg-white px-3 py-1.5 shadow-[0_1px_1.5px_rgba(0,0,0,0.12)] border border-black/[0.03] max-w-[85%] sm:max-w-md">
                             <span
                               className="block text-[11px] font-bold"
@@ -444,15 +451,20 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                           </div>
 
                           {msg.reaction && (
-                            <span className="-mt-1.5 ml-2 inline-flex items-center gap-1 rounded-full border border-slate-200/90 bg-white px-1.5 py-0.2 text-[10px] font-medium text-slate-700 shadow-sm">
-                              {msg.reaction}
-                            </span>
+                            <div className="relative z-20 -mt-2.5 ml-2.5 inline-flex items-center gap-1 rounded-full border border-slate-200/90 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-700 shadow-md">
+                              <span>👍</span>
+                              <span className="text-[10px] font-bold text-slate-500">3</span>
+                            </div>
                           )}
                         </div>
                       </div>
 
-                      {msg.dividerAfter && (
-                        <div className="my-3 border-t border-slate-300/60" />
+                      {msg.dateDividerAfter && (
+                        <div className="flex justify-center my-3.5">
+                          <span className="rounded-lg bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-600 shadow-sm ring-1 ring-black/5">
+                            {msg.dateDividerAfter}
+                          </span>
+                        </div>
                       )}
                     </div>
                   );
