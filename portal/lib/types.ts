@@ -37,6 +37,7 @@ export interface Post {
   id: number;
   title: string | null;
   body: string;
+  raw_text?: string | null;
   category: PostCategory;
   /** First photo (kept for older screens). Use `images` for all of them. */
   image_url: string | null;

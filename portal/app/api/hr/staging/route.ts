@@ -10,7 +10,7 @@ export async function GET() {
 
   // Staged incoming WhatsApp stories
   const posts = await q<Post>(
-    `select p.id, p.title, p.body, p.category, p.image_url, p.images, p.author_name,
+    `select p.id, p.title, p.body, p.raw_text, p.category, p.image_url, p.images, p.author_name,
             p.source, p.status, p.pinned, p.tagged_user_ids, p.send_to_performance,
             p.published_at, p.created_at, p.updated_at, p.review_note,
             coalesce((select json_agg(json_build_object('id', u.id, 'name', u.name, 'title', u.title, 'avatar_url', u.avatar_url, 'department', u.department, 'manager_id', u.manager_id) order by u.name)

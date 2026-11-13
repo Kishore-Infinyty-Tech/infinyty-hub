@@ -114,17 +114,23 @@ export async function POST(req: Request) {
     payload.headline ??
     null;
 
+  const bodyText: string =
+    payload.body ??
+    payload.announcement_body ??
+    payload.text ??
+    rawText;
+
   const authorDisplay = `${senderName}`;
   const taggedUserIds: number[] = Array.isArray(payload.tagged_user_ids) ? payload.tagged_user_ids : [];
 
   // Insert into portal.posts with source='whatsapp' and status='pending'
   const [row] = await q<{ id: number }>(
     `insert into portal.posts(
-       title, body, category, image_url, images, author_name, source, status,
+       title, body, raw_text, category, image_url, images, author_name, source, status,
        tagged_user_ids, send_to_performance, published_at, created_at
-     ) values($1, $2, $3, $4, $5, $6, 'whatsapp', 'pending', $7, false, now(), now())
+     ) values($1, $2, $3, $4, $5, $6, $7, 'whatsapp', 'pending', $8, false, now(), now())
      returning id`,
-    [title, rawText.trim(), category, images[0] ?? null, images, authorDisplay, taggedUserIds],
+    [title, (bodyText || rawText).trim(), rawText.trim(), category, images[0] ?? null, images, authorDisplay, taggedUserIds],
   );
 
   // Notify HR admins and founders

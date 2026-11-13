@@ -357,7 +357,7 @@ export default function HrPage() {
                         Raw WhatsApp Message Received
                       </p>
                       <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">
-                        &ldquo;{post.body}&rdquo;
+                        &ldquo;{post.raw_text || post.body}&rdquo;
                       </p>
                     </div>
 

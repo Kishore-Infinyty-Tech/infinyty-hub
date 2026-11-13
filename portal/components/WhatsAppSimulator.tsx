@@ -36,7 +36,8 @@ interface Preset {
   sender_phone: string;
   category: PostCategory;
   headline: string;
-  text: string;
+  raw_text: string;
+  polished_body: string;
   image_url: string;
   tagged_names: string[];
 }
@@ -51,7 +52,8 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-98765-43210",
     category: "client_win",
     headline: "Alex Johnson & Neha Iyer close $500k Acme Corp deal",
-    text: "Team!! Huge milestone today — Alex Johnson and Neha Iyer just officially closed the $500k Acme Corp annual contract after 6 months of negotiations! 3-year enterprise analytics deal locked in! 🚀🎉",
+    raw_text: "Guys, crazy news!! Acme Corp just signed the contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
+    polished_body: "Team!! Huge milestone today — Alex Johnson and Neha Iyer just officially closed the $500k Acme Corp annual contract after 6 months of negotiations! 3-year enterprise analytics deal locked in! 🚀🎉",
     image_url: "/api/media/posts/seed/02-acme-deal.webp",
     tagged_names: ["Alex Johnson", "Neha Iyer"],
   },
@@ -64,7 +66,8 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-98400-11223",
     category: "office_update",
     headline: "New Hyderabad Innovation Hub Opens 1 Week Early",
-    text: "Our new 12,000 sq ft Hyderabad innovation hub is officially live! Delivered 1 week ahead of schedule by Sana Qureshi and the operations team. 80 workstations & demo lab ready! 🏢✨",
+    raw_text: "Hey team, quick update from Hyderabad! The new 12k sq ft innovation hub is officially ready — delivered a whole week early! Big shoutout to Sana and the ops team 🙌 80 desks and the demo lab are all set up!",
+    polished_body: "Our new 12,000 sq ft Hyderabad innovation hub is officially live! Delivered 1 week ahead of schedule by Sana Qureshi and the operations team. 80 workstations & demo lab ready! 🏢✨",
     image_url: "/api/media/posts/seed/03-hyderabad-office.webp",
     tagged_names: ["Sana Qureshi"],
   },
@@ -77,7 +80,8 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-98100-99887",
     category: "award",
     headline: "Infinyty Honoured at State Digital Excellence Awards",
-    text: "Proud to announce Infinyty was felicitated by the State IT Department for excellence in citizen-facing analytics! Outstanding technical leadership by Vikram Rao and Arjun Nair across 14 districts! 🏛️🥇",
+    raw_text: "Just got off the call with the State IT Dept! Infinyty won the Digital Excellence Award for our district analytics work 🏛️🥇 Huge credit to Vikram and Arjun!",
+    polished_body: "Proud to announce Infinyty was felicitated by the State IT Department for excellence in citizen-facing analytics! Outstanding technical leadership by Vikram Rao and Arjun Nair across 14 districts! 🏛️🥇",
     image_url: "/api/media/posts/seed/04-state-award.webp",
     tagged_names: ["Vikram Rao", "Arjun Nair"],
   },
@@ -90,7 +94,8 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-99800-44556",
     category: "client_win",
     headline: "Kishore Reddy ships CRM feedback loop in 9 days",
-    text: "Kishore Reddy shipped the prototype-and-feedback loop in record time (9 days flat)! Sales is already demoing it live with prospective enterprise clients. ⚡💻",
+    raw_text: "Kishore just deployed the CRM prototype feedback loop in 9 days flat ⚡ Sales is already test demoing it with clients right now!",
+    polished_body: "Kishore Reddy shipped the prototype-and-feedback loop in record time (9 days flat)! Sales is already demoing it live with prospective enterprise clients. ⚡💻",
     image_url: "/api/media/posts/seed/05-prototype-loop.webp",
     tagged_names: ["Kishore Reddy R"],
   },
@@ -100,7 +105,7 @@ const CHAT_MESSAGES = [
   {
     sender: "Rohan Gupta",
     color: "#1f7acb",
-    text: "Team!! Huge milestone today — Alex Johnson and Neha Iyer just officially closed the $500k Acme Corp annual contract after 6 months of negotiations! 3-year enterprise analytics deal locked in! 🚀🎉",
+    text: "Guys, crazy news!! Acme Corp just signed the contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
     time: "10:24 AM",
   },
   {
@@ -145,7 +150,7 @@ const CHAT_MESSAGES = [
   {
     sender: "Karan Mehra",
     color: "#0288d1",
-    text: "Our new 12,000 sq ft Hyderabad innovation hub is officially live! Delivered 1 week ahead of schedule by Sana Qureshi and the operations team. 80 workstations & demo lab ready! 🏢✨",
+    text: "Hey team, quick update from Hyderabad! The new 12k sq ft innovation hub is officially ready — delivered a whole week early! Big shoutout to Sana and the ops team 🙌 80 desks and the demo lab are all set up!",
     time: "11:12 AM",
   },
   {
@@ -265,7 +270,9 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
         sender_phone: p.sender_phone,
         category: p.category,
         title: p.headline,
-        text: p.text,
+        raw_text: p.raw_text,
+        body: p.polished_body,
+        text: p.raw_text,
         image_url: p.image_url,
         tagged_user_ids: taggedIds,
       },
@@ -448,20 +455,20 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                           size={28}
                           className="!rounded-full shrink-0 shadow-sm mt-0.5"
                         />
-                        <div className="relative flex flex-col items-start">
-                          <div className="relative rounded-2xl rounded-tl-sm bg-white px-3 py-1.5 shadow-[0_1px_1.5px_rgba(0,0,0,0.12)] border border-black/[0.03] max-w-[85%] sm:max-w-md">
+                        <div className="relative flex flex-col items-start max-w-[85%] sm:max-w-md">
+                          <div className="relative w-fit rounded-2xl rounded-tl-sm bg-white px-3 pt-1.5 pb-1 shadow-[0_1px_1.5px_rgba(0,0,0,0.12)] border border-black/[0.03]">
                             <span
-                              className="block text-[11px] font-bold"
+                              className="block text-[11px] font-bold leading-tight mb-0.5"
                               style={{ color: msg.color }}
                             >
                               {msg.sender}
                             </span>
-                            <div className="flex flex-wrap items-baseline justify-between gap-3">
-                              <span className="text-xs text-slate-800 leading-snug">{msg.text}</span>
-                              <span className="ml-auto text-[9px] font-medium text-slate-400 shrink-0">
+                            <p className="text-xs text-slate-800 leading-snug m-0">
+                              <span>{msg.text}</span>
+                              <span className="float-right ml-2.5 mt-1 text-[9px] font-medium text-slate-400 leading-none select-none">
                                 {msg.time}
                               </span>
-                            </div>
+                            </p>
                           </div>
 
                           {msg.reaction && (
@@ -535,7 +542,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                           {p.headline}
                         </p>
                         <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-slate-600">
-                          &ldquo;{p.text}&rdquo;
+                          &ldquo;{p.raw_text}&rdquo;
                         </p>
 
                         <div className="mt-3 flex items-center gap-2 text-[11px] text-slate-500">
