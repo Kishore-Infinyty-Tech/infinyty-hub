@@ -52,7 +52,7 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-98765-43210",
     category: "client_win",
     headline: "Alex Johnson & Neha Iyer close $500k Acme Corp deal",
-    raw_text: "Guys, crazy news!! Acme Corp just signed the contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
+    raw_text: "Guys, crazy news!! Acme Corp just signed the 3-year contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
     polished_body: "Team!! Huge milestone today — Alex Johnson and Neha Iyer just officially closed the $500k Acme Corp annual contract after 6 months of negotiations! 3-year enterprise analytics deal locked in! 🚀🎉",
     image_url: "/api/media/posts/seed/02-acme-deal.webp",
     tagged_names: ["Alex Johnson", "Neha Iyer"],
@@ -66,7 +66,7 @@ const PRESETS: Preset[] = [
     sender_phone: "+91-98400-11223",
     category: "office_update",
     headline: "New Hyderabad Innovation Hub Opens 1 Week Early",
-    raw_text: "Hey team, quick update from Hyderabad! The new 12k sq ft innovation hub is officially ready — delivered a whole week early! Big shoutout to Sana and the ops team 🙌 80 desks and the demo lab are all set up!",
+    raw_text: "Hey team, quick update from Hyderabad! The new 12,000 sq ft innovation hub is officially live — delivered a whole week ahead of schedule! Big shoutout to Sana and the ops team 🙌 80 workstations & demo lab are all ready!",
     polished_body: "Our new 12,000 sq ft Hyderabad innovation hub is officially live! Delivered 1 week ahead of schedule by Sana Qureshi and the operations team. 80 workstations & demo lab ready! 🏢✨",
     image_url: "/api/media/posts/seed/03-hyderabad-office.webp",
     tagged_names: ["Sana Qureshi"],
@@ -105,7 +105,7 @@ const CHAT_MESSAGES = [
   {
     sender: "Rohan Gupta",
     color: "#1f7acb",
-    text: "Guys, crazy news!! Acme Corp just signed the contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
+    text: "Guys, crazy news!! Acme Corp just signed the 3-year contract! 🥳 6 months of grind finally paid off — Alex and Neha absolutely crushed the $500k enterprise analytics pitch! Huge win for the team! 🚀",
     time: "10:24 AM",
   },
   {
@@ -150,7 +150,7 @@ const CHAT_MESSAGES = [
   {
     sender: "Karan Mehra",
     color: "#0288d1",
-    text: "Hey team, quick update from Hyderabad! The new 12k sq ft innovation hub is officially ready — delivered a whole week early! Big shoutout to Sana and the ops team 🙌 80 desks and the demo lab are all set up!",
+    text: "Hey team, quick update from Hyderabad! The new 12,000 sq ft innovation hub is officially live — delivered a whole week ahead of schedule! Big shoutout to Sana and the ops team 🙌 80 workstations & demo lab are all ready!",
     time: "11:12 AM",
   },
   {
