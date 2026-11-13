@@ -2,28 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import {
   Building2,
-  CheckCircle2,
   ChevronRight,
   Code2,
-  ExternalLink,
   Flame,
   MessageCircle,
-  MessageSquare,
-  MoreVertical,
-  Phone,
   Radio,
-  Send,
-  Sparkles,
   Trophy,
   Users,
-  Video,
   X,
   Zap,
-  ArrowRight,
-  ShieldCheck,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { api, useSession } from "@/lib/session";
@@ -134,7 +123,6 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
   const [tab, setTab] = useState<"chat_view" | "presets" | "stream">("chat_view");
   const [busy, setBusy] = useState(false);
   const [logs, setLogs] = useState<WhatsAppLogEntry[]>([]);
-  const [imageVariant, setImageVariant] = useState<"ai" | "clean">("ai");
 
   const loadLogs = () => {
     api<{ logs: WhatsAppLogEntry[] }>("/api/webhooks/whatsapp")
@@ -160,7 +148,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
   const dispatch = async (payload: Record<string, unknown>, successTitle: string) => {
     setBusy(true);
     try {
-      const res = await api<{ ok: boolean; post_id: number }>("/api/webhooks/whatsapp", {
+      await api<{ ok: boolean; post_id: number }>("/api/webhooks/whatsapp", {
         method: "POST",
         json: payload,
       });
@@ -229,14 +217,9 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#008069] bg-emerald-400" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold tracking-tight sm:text-lg">
-                  Infinyty Announcements & Wins
-                </h2>
-                <span className="hidden rounded-full bg-emerald-700/80 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-emerald-100 uppercase sm:inline-block">
-                  Verified Group
-                </span>
-              </div>
+              <h2 className="text-base font-bold tracking-tight sm:text-lg">
+                Infinyty Announcements & Wins
+              </h2>
               <p className="flex items-center gap-1.5 text-xs text-emerald-100/90">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
                 24 members • Online • Live Ingestion Pipeline
@@ -244,21 +227,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-emerald-100 sm:gap-2">
-            <button
-              type="button"
-              className="hidden rounded-full p-2 transition-colors hover:bg-white/10 sm:inline-flex"
-              title="Video Call"
-            >
-              <Video className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              className="hidden rounded-full p-2 transition-colors hover:bg-white/10 sm:inline-flex"
-              title="Voice Call"
-            >
-              <Phone className="h-4 w-4" />
-            </button>
+          <div className="flex items-center">
             <button
               onClick={onClose}
               aria-label="Close"
@@ -281,8 +250,14 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
               }`}
             >
               <MessageCircle className="h-4 w-4" />
-              <span>1. WhatsApp Chat UI</span>
-              <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.2 text-[10px] font-semibold text-emerald-100">
+              <span>WhatsApp Chat UI</span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors ${
+                  tab === "chat_view"
+                    ? "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300"
+                    : "bg-emerald-950/40 text-emerald-100 ring-1 ring-emerald-400/30"
+                }`}
+              >
                 Live Look
               </span>
             </button>
@@ -296,8 +271,14 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
               }`}
             >
               <Zap className="h-4 w-4" />
-              <span>2. 1-Click Presets</span>
-              <span className="rounded-full bg-amber-400/30 px-1.5 py-0.2 text-[10px] font-semibold text-amber-200">
+              <span>1-Click Presets</span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors ${
+                  tab === "presets"
+                    ? "bg-amber-100 text-amber-900 ring-1 ring-amber-300"
+                    : "bg-amber-950/40 text-amber-200 ring-1 ring-amber-400/30"
+                }`}
+              >
                 4 Wins
               </span>
             </button>
@@ -311,8 +292,14 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
               }`}
             >
               <Radio className="h-3.5 w-3.5 text-emerald-300" />
-              <span>3. Live Webhook Stream</span>
-              <span className="rounded-full bg-emerald-800/80 px-2 py-0.5 text-[10px] font-bold text-white">
+              <span>Live Webhook Stream</span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors ${
+                  tab === "stream"
+                    ? "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300"
+                    : "bg-emerald-950/40 text-emerald-100 ring-1 ring-emerald-400/30"
+                }`}
+              >
                 {logs.length}
               </span>
             </button>
@@ -331,99 +318,13 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
         >
           {/* TAB 1: WhatsApp Group View */}
           {tab === "chat_view" && (
-            <div className="space-y-4">
-              {/* Pitch explainer banner */}
-              <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-emerald-600/30 bg-gradient-to-r from-emerald-50 via-white to-teal-50 p-4 shadow-sm sm:flex-row sm:items-center">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#008069] text-[10px] font-bold text-white">
-                      1
-                    </span>
-                    <h3 className="text-sm font-bold text-[#075e54]">
-                      Client Presentation Step 1: Real WhatsApp Conversation
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-xs text-slate-600">
-                    This is how real company announcements appear in WhatsApp before being ingested. Key wins like the
-                    <strong className="text-emerald-800"> $500k Acme Corp deal</strong> and the
-                    <strong className="text-emerald-800"> Hyderabad Office launch</strong> are surfaced automatically amidst team cheers.
-                  </p>
-                </div>
-
-                <div className="flex shrink-0 items-center gap-2">
-                  <div className="flex rounded-lg bg-emerald-100/80 p-0.5 text-[11px] font-semibold text-emerald-800">
-                    <button
-                      onClick={() => setImageVariant("ai")}
-                      className={`rounded-md px-2.5 py-1 transition-all ${
-                        imageVariant === "ai" ? "bg-white text-[#008069] shadow-sm" : "hover:text-[#008069]"
-                      }`}
-                    >
-                      AI WhatsApp Image
-                    </button>
-                    <button
-                      onClick={() => setImageVariant("clean")}
-                      className={`rounded-md px-2.5 py-1 transition-all ${
-                        imageVariant === "clean" ? "bg-white text-[#008069] shadow-sm" : "hover:text-[#008069]"
-                      }`}
-                    >
-                      Clean Mockup
-                    </button>
-                  </div>
-                  <Button
-                    size="sm"
-                    className="bg-[#008069] hover:bg-[#075e54] text-white shadow-sm"
-                    onClick={() => setTab("presets")}
-                  >
-                    <span>Go to Presets</span>
-                    <ArrowRight className="h-3.5 w-3.5 ml-1" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Realistic WhatsApp Chat Device Frame */}
-              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-emerald-700/20 bg-white shadow-xl">
-                {/* Chat Top Mini Bar */}
-                <div className="flex items-center justify-between border-b border-slate-200/60 bg-[#f0f2f5] px-4 py-2.5 text-xs font-medium text-slate-700">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                    <span className="font-semibold text-slate-800">#sales-all-stars & #city-expansion</span>
-                    <span className="text-slate-400">|</span>
-                    <span className="text-slate-500 text-[11px]">Synced with Infinyty Ingestion Webhook</span>
-                  </div>
-                  <span className="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
-                    LIVE PREVIEW
-                  </span>
-                </div>
-
-                {/* WhatsApp Chat Image Display */}
-                <div className="relative bg-[#efeae2] p-2 sm:p-4">
-                  <div className="overflow-hidden rounded-xl border border-slate-300/80 bg-white shadow-inner">
-                    <img
-                      src={
-                        imageVariant === "ai"
-                          ? "/whatsapp-chat-preview.jpg"
-                          : "/whatsapp-chat-reference.png"
-                      }
-                      alt="WhatsApp Group Chat UI with Infinyty Announcements and Celebrations"
-                      className="w-full h-auto object-contain transition-all duration-300"
-                    />
-                  </div>
-                </div>
-
-                {/* Bottom simulated input bar */}
-                <div className="flex items-center justify-between border-t border-slate-200/80 bg-[#f0f2f5] px-4 py-3 text-xs text-slate-600">
-                  <span className="flex items-center gap-1.5 text-slate-500">
-                    <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                    AI sentiment filtering active — Non-achievement chatter is automatically pruned
-                  </span>
-                  <button
-                    onClick={() => setTab("presets")}
-                    className="flex items-center gap-1 font-bold text-[#008069] hover:underline"
-                  >
-                    <span>Test Ingestion in Step 2</span>
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-300/80 bg-white shadow-xl">
+                <img
+                  src="/whatsapp-chat-ui.jpg"
+                  alt="WhatsApp Group Chat UI with Infinyty Announcements and Celebrations"
+                  className="h-auto w-full object-contain"
+                />
               </div>
             </div>
           )}
@@ -431,16 +332,11 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
           {/* TAB 2: 1-Click Presets */}
           {tab === "presets" && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-emerald-50/80 px-4 py-2.5 text-xs text-[#075e54]">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#008069] text-[10px] font-bold text-white">
-                    2
-                  </span>
-                  <span className="font-semibold">
-                    Step 2: Ingest captured WhatsApp wins into the HR staging desk
-                  </span>
-                </div>
-                <span className="text-[11px] text-emerald-700 font-medium">Click any win below to trigger</span>
+              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-white/80 px-4 py-2.5 text-xs text-[#075e54] shadow-sm">
+                <span className="font-semibold">
+                  Ingest captured WhatsApp wins into the HR staging desk
+                </span>
+                <span className="text-[11px] font-medium text-emerald-700">Click any win below to trigger</span>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
@@ -500,18 +396,13 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
           {/* TAB 3: Live Webhook Stream */}
           {tab === "stream" && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-emerald-50/80 px-4 py-2.5 text-xs text-[#075e54]">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#008069] text-[10px] font-bold text-white">
-                    3
-                  </span>
-                  <span className="font-semibold">
-                    Step 3: Real-time inbound webhook logs received at <code className="font-mono text-[#008069]">/api/webhooks/whatsapp</code>
-                  </span>
-                </div>
+              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-white/80 px-4 py-2.5 text-xs text-[#075e54] shadow-sm">
+                <span className="font-semibold">
+                  Inbound webhook logs received at <code className="font-mono text-[#008069]">/api/webhooks/whatsapp</code>
+                </span>
                 <button
                   onClick={loadLogs}
-                  className="rounded-lg bg-white px-2.5 py-1 text-[11px] font-bold text-[#008069] shadow-sm hover:bg-emerald-50"
+                  className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-[#008069] shadow-sm hover:bg-emerald-100"
                 >
                   Refresh Logs
                 </button>
@@ -523,13 +414,6 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                   <p className="mt-1 text-xs text-slate-500">
                     Switch to the <strong>1-Click Presets</strong> tab to trigger and simulate an incoming WhatsApp event!
                   </p>
-                  <button
-                    onClick={() => setTab("presets")}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-[#008069] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#075e54]"
-                  >
-                    <span>Open 1-Click Presets</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
                 </div>
               ) : (
                 <div className="max-h-96 space-y-2.5 overflow-y-auto pr-1">
@@ -586,7 +470,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
         <footer className="flex items-center justify-between border-t border-slate-200/80 bg-[#f0f2f5] px-4 py-3 text-xs text-slate-600 sm:px-6">
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-[#008069]" />
-            <span className="text-slate-500 font-medium">WhatsApp Enterprise Business API Simulation</span>
+            <span className="font-medium text-slate-500">WhatsApp Enterprise Business API Simulation</span>
           </div>
           <button
             onClick={onClose}
