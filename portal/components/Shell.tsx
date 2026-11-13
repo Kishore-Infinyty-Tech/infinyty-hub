@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { Bell, Check, ChevronRight, ClipboardCheck, Home, LayoutGrid, LogOut, Menu, Search, ShieldCheck, Sparkles, TrendingUp, UserRound, Users, X } from "lucide-react";
+import { Bell, Check, ChevronRight, ClipboardCheck, Home, LayoutGrid, LogOut, Menu, Search, ShieldCheck, Sparkles, Trophy, UserRound, Users, X } from "lucide-react";
 import { api, useSession } from "@/lib/session";
 import { ROLE_LABEL, timeAgo } from "@/lib/format";
 import { appIcon, hue } from "@/lib/icons";
@@ -15,7 +15,7 @@ import { WhatsAppSimulatorButton } from "./WhatsAppSimulator";
 const NAV: { href: string; label: string; icon: typeof Home; roles?: Role[] }[] = [
   { href: "/home", label: "Home", icon: Home },
   { href: "/apps", label: "App Launcher", icon: LayoutGrid },
-  { href: "/apps/performance", label: "Contribution Tracker", icon: TrendingUp },
+  { href: "/apps/performance", label: "Contribution Tracker", icon: Trophy },
   { href: "/approvals", label: "Manager Approvals", icon: ClipboardCheck, roles: ["manager", "hr_admin", "founder"] },
   { href: "/hr", label: "HR Moderation", icon: ShieldCheck, roles: ["hr_admin", "founder"] },
   { href: "/people", label: "People", icon: Users, roles: ["manager", "hr_admin", "founder"] },

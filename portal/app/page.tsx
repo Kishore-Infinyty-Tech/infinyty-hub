@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRight, Award, BadgeCheck, BellRing, ClipboardCheck, LayoutGrid, Lock, Megaphone, MessageCircle, Newspaper, PartyPopper, ShieldCheck, Sparkles as SparkIcon, TrendingUp } from "lucide-react";
+import { ArrowRight, Award, BadgeCheck, BellRing, ClipboardCheck, LayoutGrid, Lock, Megaphone, MessageCircle, Newspaper, PartyPopper, ShieldCheck, Sparkles as SparkIcon, Trophy } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useIntro } from "@/components/fx/Intro";
 import { CountUp, Reveal, Tilt } from "@/components/fx/effects";
@@ -10,7 +10,7 @@ import { HUE, appIcon } from "@/lib/icons";
 import { useSession } from "@/lib/session";
 
 const TOOLS: [string, string, string][] = [
-  ["Contribution", "Gauge", "violet"], ["Leave", "CalendarCheck", "emerald"], ["Invoices", "ReceiptText", "amber"], ["Payables", "WalletCards", "rose"],
+  ["Contribution", "Trophy", "violet"], ["Leave", "CalendarCheck", "emerald"], ["Invoices", "ReceiptText", "amber"], ["Payables", "WalletCards", "rose"],
   ["CRM", "Handshake", "blue"], ["Attendance", "Fingerprint", "teal"], ["Payroll", "Banknote", "green"], ["Expenses", "Coins", "orange"],
   ["Recruitment", "UserSearch", "indigo"], ["Helpdesk", "LifeBuoy", "cyan"], ["Learning", "GraduationCap", "fuchsia"], ["Analytics", "ChartNoAxesCombined", "lime"],
 ];
@@ -27,7 +27,7 @@ const FLOW = [
   { icon: ClipboardCheck, title: "HR reviews", text: "Edit, categorise, tag contributors, publish." },
   { icon: PartyPopper, title: "Company celebrates", text: "Reactions and comments on the live feed." },
   { icon: BadgeCheck, title: "Manager verifies", text: "One click to approve for the record." },
-  { icon: TrendingUp, title: "Contribution record", text: "Ready, with evidence, at review time." },
+  { icon: Trophy, title: "Contribution record", text: "Ready, with evidence, at review time." },
 ];
 
 function Showcase() {

@@ -1,10 +1,10 @@
 import {
   BookOpenCheck, Banknote, CalendarCheck, ChartNoAxesCombined, Coins, DoorOpen, Fingerprint, Gauge, GraduationCap,
-  Handshake, Laptop, LifeBuoy, Plane, ReceiptText, UserSearch, WalletCards, LayoutGrid, type LucideIcon,
+  Handshake, Laptop, LifeBuoy, Plane, ReceiptText, UserSearch, WalletCards, LayoutGrid, Trophy, type LucideIcon,
 } from "lucide-react";
 
 export const APP_ICONS: Record<string, LucideIcon> = {
-  Gauge, CalendarCheck, ReceiptText, WalletCards, Handshake, Fingerprint, Banknote, Coins, UserSearch, LifeBuoy,
+  Gauge, Trophy, CalendarCheck, ReceiptText, WalletCards, Handshake, Fingerprint, Banknote, Coins, UserSearch, LifeBuoy,
   Laptop, DoorOpen, Plane, GraduationCap, ChartNoAxesCombined, BookOpenCheck,
 };
 export const appIcon = (name: string): LucideIcon => APP_ICONS[name] ?? LayoutGrid;

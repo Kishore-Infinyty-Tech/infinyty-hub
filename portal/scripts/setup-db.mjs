@@ -104,7 +104,7 @@ for (const [, email, , , , mgr] of users) if (mgr) await db.query("update portal
 const ALL = ["employee", "manager", "hr_admin"];
 const apps = [
   // id, name, tagline, category, icon, hue, kind, url, roles
-  ["performance", "Contribution Tracker", "Goals, reviews and verified milestones", "People", "Gauge", "violet", "demo", null, ALL],
+  ["performance", "Contribution Tracker", "Goals, reviews and verified milestones", "People", "Trophy", "violet", "demo", null, ALL],
   ["leave", "Leave Management", "Apply, approve and track time off", "People", "CalendarCheck", "emerald", "demo", null, ALL],
   ["invoices", "Invoice Management", "Raise, send and reconcile client invoices", "Finance", "ReceiptText", "amber", "demo", null, ["manager", "hr_admin"]],
   ["payables", "Payables Management", "Vendor bills, approvals and payouts", "Finance", "WalletCards", "rose", "demo", null, ["hr_admin"]],

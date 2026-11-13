@@ -4,7 +4,7 @@ import { json, q } from "@/lib/db";
 export async function GET(req: Request) {
   const userId = Number(new URL(req.url).searchParams.get("userId"));
   const apps = await q(
-    `select a.id, case when a.id = 'performance' then 'Contribution Tracker' else a.name end as name, a.tagline, a.category, a.icon, a.hue, a.kind, a.url, a.featured,
+    `select a.id, case when a.id = 'performance' then 'Contribution Tracker' else a.name end as name, a.tagline, a.category, case when a.id = 'performance' then 'Trophy' else a.icon end as icon, a.hue, a.kind, a.url, a.featured,
             exists (select 1 from portal.app_permissions p join portal.users u on u.role = p.role
                     where p.app_id = a.id and u.id = $1) as accessible,
             (select r.status from portal.access_requests r where r.app_id = a.id and r.user_id = $1
