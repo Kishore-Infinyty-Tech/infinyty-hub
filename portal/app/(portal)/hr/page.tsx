@@ -251,7 +251,7 @@ export default function HrPage() {
 
         <div className="glass hover-lift relative overflow-hidden rounded-3xl p-5">
           <span className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 opacity-20 blur-xl" />
-          <p className="text-xs font-semibold text-slate-500">Sent to Performance Trackers</p>
+          <p className="text-xs font-semibold text-slate-500">Sent to Contribution Tracker</p>
           <div className="mt-2 flex items-baseline gap-2">
             <p className="text-3xl font-extrabold text-slate-900">{stats.achievements_routed}</p>
             <span className="text-xs font-medium text-indigo-600">manager milestones</span>
@@ -490,10 +490,10 @@ export default function HrPage() {
                             <div>
                               <p className="flex items-center gap-1.5 text-sm font-bold text-indigo-950">
                                 <Trophy className="h-4 w-4 text-gold-500" />
-                                Send to Performance Review Tracker
+                                Send to Contribution Tracker
                               </p>
                               <p className="mt-0.5 text-xs leading-relaxed text-slate-600">
-                                Automatically dispatches an approval task to each tagged contributor&apos;s direct manager. Once verified by the manager, it locks into their Performance Profile as a KPI milestone.
+                                Automatically dispatches an approval task to each tagged contributor&apos;s direct manager. Once verified by the manager, it locks into their Contribution Tracker as a KPI milestone.
                               </p>
                             </div>
                           </label>

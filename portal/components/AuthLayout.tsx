@@ -6,7 +6,7 @@ import { Sparkles } from "./fx/Sparkles";
 
 const FEATURES = [
   { icon: Newspaper, title: "The company feed", text: "Client wins, offices, awards and announcements, all in one place.", tone: "from-indigo-500 to-cyan-glow" },
-  { icon: LayoutGrid, title: "Every tool, one launcher", text: "Performance, Leave, Invoices, Payables, CRM and more.", tone: "from-violet-500 to-fuchsia-400" },
+  { icon: LayoutGrid, title: "Every tool, one launcher", text: "Contribution Tracker, Leave, Invoices, Payables, CRM and more.", tone: "from-violet-500 to-fuchsia-400" },
   { icon: Award, title: "Credit that is recorded", text: "Verified milestones, ready for your next review.", tone: "from-gold-500 to-gold-300" },
 ];
 

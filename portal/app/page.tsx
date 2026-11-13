@@ -10,15 +10,15 @@ import { HUE, appIcon } from "@/lib/icons";
 import { useSession } from "@/lib/session";
 
 const TOOLS: [string, string, string][] = [
-  ["Performance", "Gauge", "violet"], ["Leave", "CalendarCheck", "emerald"], ["Invoices", "ReceiptText", "amber"], ["Payables", "WalletCards", "rose"],
+  ["Contribution", "Gauge", "violet"], ["Leave", "CalendarCheck", "emerald"], ["Invoices", "ReceiptText", "amber"], ["Payables", "WalletCards", "rose"],
   ["CRM", "Handshake", "blue"], ["Attendance", "Fingerprint", "teal"], ["Payroll", "Banknote", "green"], ["Expenses", "Coins", "orange"],
   ["Recruitment", "UserSearch", "indigo"], ["Helpdesk", "LifeBuoy", "cyan"], ["Learning", "GraduationCap", "fuchsia"], ["Analytics", "ChartNoAxesCombined", "lime"],
 ];
 
 const FEATURES = [
   { icon: Newspaper, title: "Wins that never get lost", text: "Achievements shared in WhatsApp groups are reviewed by HR and published to one company feed that stays searchable.", tone: "from-indigo-600 to-cyan-glow" },
-  { icon: LayoutGrid, title: "Every tool, one launcher", text: "Performance, Leave, Invoices, Payables, CRM and more. Everyone sees everything, and opens only what their role allows.", tone: "from-violet-600 to-fuchsia-400" },
-  { icon: Award, title: "Credit where it is due", text: "Major contributors are tagged on a story. Their manager verifies it, and it lands in the Performance record for review time.", tone: "from-amber-500 to-yellow-300" },
+  { icon: LayoutGrid, title: "Every tool, one launcher", text: "Contribution Tracker, Leave, Invoices, Payables, CRM and more. Everyone sees everything, and opens only what their role allows.", tone: "from-violet-600 to-fuchsia-400" },
+  { icon: Award, title: "Credit where it is due", text: "Major contributors are tagged on a story. Their manager verifies it, and it lands in the Contribution record for review time.", tone: "from-amber-500 to-yellow-300" },
   { icon: ShieldCheck, title: "Access that is always clear", text: "A restricted app shows a clean request-access screen instead of a dead end. HR is notified straight away.", tone: "from-emerald-600 to-teal-300" },
 ];
 
@@ -27,7 +27,7 @@ const FLOW = [
   { icon: ClipboardCheck, title: "HR reviews", text: "Edit, categorise, tag contributors, publish." },
   { icon: PartyPopper, title: "Company celebrates", text: "Reactions and comments on the live feed." },
   { icon: BadgeCheck, title: "Manager verifies", text: "One click to approve for the record." },
-  { icon: TrendingUp, title: "Performance record", text: "Ready, with evidence, at review time." },
+  { icon: TrendingUp, title: "Contribution record", text: "Ready, with evidence, at review time." },
 ];
 
 function Showcase() {
@@ -48,7 +48,7 @@ function Showcase() {
       <Tilt className="absolute -right-3 -top-5 hidden w-56 sm:block" max={8}>
         <div className="glass-strong animate-float flex items-center gap-3 rounded-2xl p-3.5" style={{ animationDelay: "-3s" }}>
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-300 text-white"><BadgeCheck className="h-5 w-5" /></span>
-          <div><p className="text-sm font-bold text-slate-900">Milestone verified</p><p className="text-xs text-slate-500">Added to Performance</p></div>
+          <div><p className="text-sm font-bold text-slate-900">Milestone verified</p><p className="text-xs text-slate-500">Added to Contribution Tracker</p></div>
         </div>
       </Tilt>
       <Tilt className="absolute -bottom-10 right-2 hidden w-52 sm:block" max={8}>

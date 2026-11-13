@@ -127,7 +127,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
         if (u.manager_id) {
           await q(
             `insert into portal.notifications(user_id, title, body, href)
-             values($1, 'Performance milestone awaiting approval', $2, '/approvals')`,
+             values($1, 'Contribution milestone awaiting approval', $2, '/approvals')`,
             [
               u.manager_id,
               `HR flagged an achievement for ${u.name}: "${milestoneTitle}". Verify to credit KPI.`,

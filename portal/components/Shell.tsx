@@ -15,8 +15,8 @@ import { WhatsAppSimulatorButton } from "./WhatsAppSimulator";
 const NAV: { href: string; label: string; icon: typeof Home; roles?: Role[] }[] = [
   { href: "/home", label: "Home", icon: Home },
   { href: "/apps", label: "App Launcher", icon: LayoutGrid },
-  { href: "/apps/performance", label: "Performance", icon: TrendingUp },
-  { href: "/approvals", label: "Approvals", icon: ClipboardCheck, roles: ["manager", "hr_admin", "founder"] },
+  { href: "/apps/performance", label: "Contribution Tracker", icon: TrendingUp },
+  { href: "/approvals", label: "Manager Approvals", icon: ClipboardCheck, roles: ["manager", "hr_admin", "founder"] },
   { href: "/hr", label: "HR Moderation", icon: ShieldCheck, roles: ["hr_admin", "founder"] },
   { href: "/people", label: "People", icon: Users, roles: ["manager", "hr_admin", "founder"] },
 ];

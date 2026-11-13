@@ -13,7 +13,7 @@ export async function GET() {
               (select count(*)::int from portal.posts where $1 = any(tagged_user_ids) and status = 'published') as tagged_posts,
               (select count(*)::int from portal.post_comments where user_id = $1) as comments,
               (select last_login_at from portal.users where id = $1) as last_login_at`, [me.id]),
-    q(`select a.id, a.name, a.icon, a.hue from portal.apps a
+    q(`select a.id, case when a.id = 'performance' then 'Contribution Tracker' else a.name end as name, a.icon, a.hue from portal.apps a
         where exists (select 1 from portal.app_permissions p where p.app_id = a.id and p.role = $1) order by a.sort`, [me.role]),
   ]);
   const [{ total }] = await q<{ total: number }>(`select count(*)::int as total from portal.apps`);

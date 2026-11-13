@@ -57,7 +57,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   if (action === "approve") {
     await q(
       `insert into portal.notifications(user_id, title, body, href)
-       values($1, 'Performance Milestone Verified!', $2, '/apps/performance')`,
+       values($1, 'Contribution Milestone Verified!', $2, '/apps/performance')`,
       [
         achievement.user_id,
         `${me.name} verified "${achievement.title}". Locked in as a verified milestone for your review cycle!`,

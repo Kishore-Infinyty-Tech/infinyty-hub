@@ -49,7 +49,7 @@ export function MilestoneApprovals() {
       });
 
       if (action === "approve") {
-        toast(`Verified milestone for ${m.employee_name}! Credited to Performance Tracker.`);
+        toast(`Verified milestone for ${m.employee_name}! Credited to Contribution Tracker.`);
       } else {
         toast(`Milestone rejected for ${m.employee_name}.`, "error");
       }
@@ -72,7 +72,7 @@ export function MilestoneApprovals() {
       title={
         <span className="flex items-center gap-2">
           <Trophy className="h-4 w-4 text-gold-500" />
-          <span>Performance Milestones (Awaiting Manager Verification)</span>
+          <span>Contribution Milestones (Awaiting Manager Verification)</span>
         </span>
       }
       actions={
@@ -91,7 +91,7 @@ export function MilestoneApprovals() {
           title="All performance milestones reviewed"
           hint={
             role === "manager"
-              ? "When HR tags your team members in significant company announcements and checks 'Send to Performance Review', they appear here for your verification."
+              ? "When HR tags your team members in significant company announcements and checks 'Send to Contribution Tracker', they appear here for your verification."
               : "No pending performance milestones in the review queue."
           }
         />
@@ -225,7 +225,7 @@ export function MilestoneApprovals() {
       {/* Decline Milestone Dialog */}
       <Modal
         open={!!rejecting}
-        title="Decline Performance Milestone"
+        title="Decline Contribution Milestone"
         onClose={() => setRejecting(null)}
         footer={
           <>
