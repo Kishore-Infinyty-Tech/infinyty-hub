@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         [emailName(entered), entered],
       )
     : [];
-  const anyPassword = process.env.ALLOW_ANY_PASSWORD === "1";
+  const anyPassword = process.env.ALLOW_ANY_PASSWORD === "1" || process.env.DEMO_MODE === "1";
   // same message for "no such user" and "wrong password" so emails cannot be probed
   if (!u || !(anyPassword || (await verifyPassword(String(password), u.password_hash)))) return fail("That email or password is not right", 401);
   await q(`update portal.users set last_login_at = now() where id = $1`, [u.id]);

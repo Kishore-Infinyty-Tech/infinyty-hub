@@ -8,9 +8,15 @@ import {
   Code2,
   Flame,
   MessageCircle,
+  Mic,
+  MoreVertical,
+  Paperclip,
+  Phone,
   Radio,
+  Smile,
   Trophy,
   Users,
+  Video,
   X,
   Zap,
 } from "lucide-react";
@@ -19,6 +25,7 @@ import { api, useSession } from "@/lib/session";
 import type { PostCategory } from "@/lib/types";
 import type { WhatsAppLogEntry } from "@/lib/whatsapp";
 import { Badge, Button, useToast } from "./ui";
+import { Avatar } from "./fx/effects";
 
 interface Preset {
   id: string;
@@ -86,6 +93,65 @@ const PRESETS: Preset[] = [
     text: "Kishore Reddy shipped the prototype-and-feedback loop in record time (9 days flat)! Sales is already demoing it live with prospective enterprise clients. ⚡💻",
     image_url: "/api/media/posts/seed/05-prototype-loop.webp",
     tagged_names: ["Kishore Reddy R"],
+  },
+];
+
+const CHAT_MESSAGES = [
+  {
+    sender: "Rohan Gupta",
+    color: "#1f7acb",
+    text: "New deal with Acme Corp closed.",
+    time: "10:24 AM",
+  },
+  {
+    sender: "Neha Iyer",
+    color: "#d81b60",
+    text: "Congrats 🎉",
+    time: "10:25 AM",
+    reaction: "👍 3",
+  },
+  {
+    sender: "Aayush Mahendru",
+    color: "#2e7d32",
+    text: "Kudos to Nehash and team 🙌",
+    time: "10:26 AM",
+  },
+  {
+    sender: "Vikram Rao",
+    color: "#e65100",
+    text: "Nice work!",
+    time: "10:26 AM",
+  },
+  {
+    sender: "Sana Qureshi",
+    color: "#00897b",
+    text: "Congrats 🎉",
+    time: "10:27 AM",
+  },
+  {
+    sender: "Arjun Nair",
+    color: "#5e35b1",
+    text: "Congrats!",
+    time: "10:27 AM",
+    dividerAfter: true,
+  },
+  {
+    sender: "Karan Mehra",
+    color: "#0288d1",
+    text: "Office opens in Hyderabad!",
+    time: "11:12 AM",
+  },
+  {
+    sender: "Aditi Vad",
+    color: "#8e24aa",
+    text: "Congrats! 🎉",
+    time: "11:12 AM",
+  },
+  {
+    sender: "Rhea Kapoor",
+    color: "#43a047",
+    text: "Which functions?",
+    time: "11:13 AM",
   },
 ];
 
@@ -209,8 +275,8 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
           boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 40px -10px rgba(0, 128, 105, 0.3)",
         }}
       >
-        {/* WhatsApp App Header */}
-        <header className="flex items-center justify-between bg-[#008069] px-4 py-3 text-white sm:px-6">
+        {/* WhatsApp App Header (Clean: Title only, no subtitle, close button) */}
+        <header className="flex items-center justify-between bg-[#008069] px-4 py-3.5 text-white sm:px-6">
           <div className="flex items-center gap-3">
             <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-white shadow-inner">
               <Users className="h-5 w-5" />
@@ -220,10 +286,6 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
               <h2 className="text-base font-bold tracking-tight sm:text-lg">
                 Infinyty Announcements & Wins
               </h2>
-              <p className="flex items-center gap-1.5 text-xs text-emerald-100/90">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
-                24 members • Online • Live Ingestion Pipeline
-              </p>
             </div>
           </div>
 
@@ -308,7 +370,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
 
         {/* Modal Body with WhatsApp Doodle Wallpaper Styling */}
         <div
-          className="max-h-[75vh] overflow-y-auto p-4 sm:p-6"
+          className="max-h-[75vh] overflow-y-auto p-3 sm:p-5"
           style={{
             backgroundColor: "#efeae2",
             backgroundImage: `radial-gradient(#008069 0.4px, transparent 0.4px), radial-gradient(#d1d7db 0.4px, #efeae2 0.4px)`,
@@ -316,15 +378,109 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
             backgroundPosition: "0 0, 8px 8px",
           }}
         >
-          {/* TAB 1: WhatsApp Group View */}
+          {/* TAB 1: Pixel-Perfect Native WhatsApp Group Chat UI */}
           {tab === "chat_view" && (
-            <div className="flex justify-center">
-              <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-300/80 bg-white shadow-xl">
-                <img
-                  src="/whatsapp-chat-ui.jpg"
-                  alt="WhatsApp Group Chat UI with Infinyty Announcements and Celebrations"
-                  className="h-auto w-full object-contain"
-                />
+            <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-emerald-900/15 bg-white shadow-xl">
+              {/* Internal WhatsApp Chat Bar (matches real WhatsApp UI exactly) */}
+              <div className="flex items-center justify-between bg-[#008069] px-3.5 py-2.5 text-white">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white shadow-inner">
+                    <Users className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold sm:text-sm leading-tight">
+                      Infinyty Announcements & Wins
+                    </h3>
+                    <p className="text-[10px] text-emerald-100/90 leading-tight">
+                      24 members • <span className="text-emerald-300 font-medium">Online</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-emerald-100">
+                  <Video className="h-4 w-4 cursor-pointer hover:text-white" />
+                  <Phone className="h-4 w-4 cursor-pointer hover:text-white" />
+                  <MoreVertical className="h-4 w-4 cursor-pointer hover:text-white" />
+                </div>
+              </div>
+
+              {/* Chat Canvas with authentic WhatsApp doodle background & crisp bubbles */}
+              <div
+                className="space-y-2 p-3 sm:p-4 text-xs select-text overflow-y-auto max-h-[50vh]"
+                style={{
+                  backgroundColor: "#efeae2",
+                  backgroundImage: `radial-gradient(#008069 0.4px, transparent 0.4px), radial-gradient(#d1d7db 0.4px, #efeae2 0.4px)`,
+                  backgroundSize: "16px 16px",
+                  backgroundPosition: "0 0, 8px 8px",
+                }}
+              >
+                {CHAT_MESSAGES.map((msg, idx) => {
+                  const userObj = users.find((u) =>
+                    u.name.toLowerCase().includes(msg.sender.toLowerCase().split(" ")[0]),
+                  );
+                  return (
+                    <div key={idx} className="space-y-2">
+                      <div className="flex items-start gap-2">
+                        <Avatar
+                          name={msg.sender}
+                          src={userObj?.avatar_url}
+                          size={28}
+                          className="!rounded-full shrink-0 shadow-sm mt-0.5"
+                        />
+                        <div className="group relative flex flex-col items-start">
+                          <div className="relative rounded-2xl rounded-tl-sm bg-white px-3 py-1.5 shadow-[0_1px_1.5px_rgba(0,0,0,0.12)] border border-black/[0.03] max-w-[85%] sm:max-w-md">
+                            <span
+                              className="block text-[11px] font-bold"
+                              style={{ color: msg.color }}
+                            >
+                              {msg.sender}
+                            </span>
+                            <div className="flex flex-wrap items-baseline justify-between gap-3">
+                              <span className="text-xs text-slate-800 leading-snug">{msg.text}</span>
+                              <span className="ml-auto text-[9px] font-medium text-slate-400 shrink-0">
+                                {msg.time}
+                              </span>
+                            </div>
+                          </div>
+
+                          {msg.reaction && (
+                            <span className="-mt-1.5 ml-2 inline-flex items-center gap-1 rounded-full border border-slate-200/90 bg-white px-1.5 py-0.2 text-[10px] font-medium text-slate-700 shadow-sm">
+                              {msg.reaction}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {msg.dividerAfter && (
+                        <div className="my-3 border-t border-slate-300/60" />
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Animated Typing Indicator */}
+                <div className="flex items-center gap-2 pt-1 pl-9">
+                  <div className="flex items-center gap-1 rounded-full bg-white px-2 py-1 shadow-sm ring-1 ring-black/5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.3s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.15s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" />
+                  </div>
+                  <span className="text-[11px] text-slate-500 italic">Rohan is typing...</span>
+                </div>
+              </div>
+
+              {/* Authentic WhatsApp Message Input Bar */}
+              <div className="flex items-center gap-2 border-t border-slate-200/80 bg-[#f0f2f5] px-3 py-2.5">
+                <div className="flex flex-1 items-center gap-2.5 rounded-full bg-white px-3.5 py-1.5 shadow-sm ring-1 ring-black/5">
+                  <Smile className="h-5 w-5 text-slate-400 shrink-0 cursor-pointer hover:text-slate-600" />
+                  <span className="text-xs text-slate-400 select-none">Type a message...</span>
+                  <div className="ml-auto flex items-center gap-2 text-slate-400">
+                    <Paperclip className="h-4 w-4 cursor-pointer hover:text-slate-600" />
+                  </div>
+                </div>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#008069] text-white shadow-md">
+                  <Mic className="h-4 w-4" />
+                </div>
               </div>
             </div>
           )}
@@ -332,13 +488,6 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
           {/* TAB 2: 1-Click Presets */}
           {tab === "presets" && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-white/80 px-4 py-2.5 text-xs text-[#075e54] shadow-sm">
-                <span className="font-semibold">
-                  Ingest captured WhatsApp wins into the HR staging desk
-                </span>
-                <span className="text-[11px] font-medium text-emerald-700">Click any win below to trigger</span>
-              </div>
-
               <div className="grid gap-3 sm:grid-cols-2">
                 {PRESETS.map((p) => {
                   const Icon = p.icon;
@@ -393,21 +542,9 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
             </div>
           )}
 
-          {/* TAB 3: Live Webhook Stream */}
+          {/* TAB 3: Live Webhook Stream (Clean list, no top banner or refresh button) */}
           {tab === "stream" && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-xl border border-emerald-600/20 bg-white/80 px-4 py-2.5 text-xs text-[#075e54] shadow-sm">
-                <span className="font-semibold">
-                  Inbound webhook logs received at <code className="font-mono text-[#008069]">/api/webhooks/whatsapp</code>
-                </span>
-                <button
-                  onClick={loadLogs}
-                  className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-[#008069] shadow-sm hover:bg-emerald-100"
-                >
-                  Refresh Logs
-                </button>
-              </div>
-
+            <div className="space-y-2.5">
               {logs.length === 0 ? (
                 <div className="rounded-2xl border-2 border-dashed border-emerald-700/30 bg-white/80 p-8 text-center text-sm text-slate-500">
                   <p className="font-medium text-slate-700">No webhook events recorded yet.</p>
@@ -416,7 +553,7 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
                   </p>
                 </div>
               ) : (
-                <div className="max-h-96 space-y-2.5 overflow-y-auto pr-1">
+                <div className="max-h-[55vh] space-y-2.5 overflow-y-auto pr-1">
                   {logs.map((l) => (
                     <div
                       key={l.id}
