@@ -100,58 +100,72 @@ const CHAT_MESSAGES = [
   {
     sender: "Rohan Gupta",
     color: "#1f7acb",
-    text: "New deal with Acme Corp closed.",
+    text: "Team!! Huge milestone today — Alex Johnson and Neha Iyer just officially closed the $500k Acme Corp annual contract after 6 months of negotiations! 3-year enterprise analytics deal locked in! 🚀🎉",
     time: "10:24 AM",
   },
   {
     sender: "Neha Iyer",
     color: "#d81b60",
-    text: "Congrats 🎉",
+    text: "Couldn't have done it without Alex crunching the custom analytics models for them. Huge team effort! 🙌🎉",
     time: "10:25 AM",
-    reaction: "👍 3",
+    reaction: "❤️ 5",
+  },
+  {
+    sender: "Alex Johnson",
+    color: "#059669",
+    text: "Proud of this one! Acme team was super impressed with our delivery timeline. Thanks everyone! 🚀",
+    time: "10:25 AM",
   },
   {
     sender: "Aayush Mahendru",
     color: "#2e7d32",
-    text: "Kudos to Nehash and team 🙌",
+    text: "Kudos to Neha, Alex and the entire sales team! $500k ARR is massive! 👏🥂",
     time: "10:26 AM",
   },
   {
     sender: "Vikram Rao",
     color: "#e65100",
-    text: "Nice work!",
+    text: "Phenomenal execution team! This sets a whole new benchmark for enterprise deals. 📈🔥",
     time: "10:26 AM",
   },
   {
     sender: "Sana Qureshi",
     color: "#00897b",
-    text: "Congrats 🎉",
+    text: "Super congratulations Neha & Alex! Inspiring win! 🎉🎉",
     time: "10:27 AM",
   },
   {
-    sender: "Arjun Nair",
-    color: "#5e35b1",
-    text: "Congrats!",
-    time: "10:27 AM",
+    sender: "Aditi Vad",
+    color: "#8e24aa",
+    text: "Incredible milestone for Infinyty! Congratulations Neha, Alex, and Rohan. Proud moment for all of us! 🌟👏",
+    time: "10:28 AM",
+    reaction: "🔥 6",
     dateDividerAfter: "Today",
   },
   {
     sender: "Karan Mehra",
     color: "#0288d1",
-    text: "Office opens in Hyderabad!",
+    text: "Our new 12,000 sq ft Hyderabad innovation hub is officially live! Delivered 1 week ahead of schedule by Sana Qureshi and the operations team. 80 workstations & demo lab ready! 🏢✨",
     time: "11:12 AM",
   },
   {
-    sender: "Aditi Vad",
-    color: "#8e24aa",
-    text: "Congrats! 🎉",
-    time: "11:12 AM",
+    sender: "Sana Qureshi",
+    color: "#00897b",
+    text: "All 80 workstations, high-speed fiber, and the client demo labs are fully wired and operational! Doors open Monday! 🚀💻",
+    time: "11:13 AM",
+    reaction: "🎉 4",
   },
   {
     sender: "Rhea Kapoor",
     color: "#43a047",
-    text: "Which functions?",
-    time: "11:13 AM",
+    text: "Looks stunning Karan & Sana! Which engineering functions are moving in first?",
+    time: "11:14 AM",
+  },
+  {
+    sender: "Karan Mehra",
+    color: "#0288d1",
+    text: "Core Platform and Cloud Infra teams will take the 1st floor, with Sales & Client Success on the 2nd. Photos coming shortly! 📸",
+    time: "11:15 AM",
   },
 ];
 
@@ -452,8 +466,8 @@ export function WhatsAppSimulatorModal({ open, onClose }: { open: boolean; onClo
 
                           {msg.reaction && (
                             <div className="relative z-20 -mt-2.5 ml-2.5 inline-flex items-center gap-1 rounded-full border border-slate-200/90 bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-700 shadow-md">
-                              <span>👍</span>
-                              <span className="text-[10px] font-bold text-slate-500">3</span>
+                              <span>{msg.reaction.split(" ")[0]}</span>
+                              <span className="text-[10px] font-bold text-slate-500">{msg.reaction.split(" ")[1]}</span>
                             </div>
                           )}
                         </div>
